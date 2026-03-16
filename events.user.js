@@ -88,13 +88,17 @@ const utils = {
 // Event handling functions
 const eventHandlers = {
   mergeEventElements: (events) => {
-    events.sort((e1, e2) => utils.dragType(e1) - utils.dragType(e2));
-    const colors = events.map(
-      (event) =>
-        event.style.backgroundColor || 
-        event.style.borderColor || 
-        event.parentElement.style.borderColor
-    );
+    // Sort busy events to the end so the real event title is kept visible
+    events.sort((e1, e2) => (e1._isBusy || 0) - (e2._isBusy || 0) || utils.dragType(e1) - utils.dragType(e2));
+
+    // Save original colors before any merge modifies them
+    events.forEach((event) => {
+      event._originalColor = event._originalColor ||
+        event.style.backgroundColor ||
+        event.style.borderColor ||
+        event.parentElement.style.borderColor;
+    });
+    const colors = events.map((event) => event._originalColor);
 
     const parentPosition = events[0].parentElement.getBoundingClientRect();
     const positions = events.map((event) => {
@@ -107,10 +111,11 @@ const eventHandlers = {
       event.style.visibility = 'hidden';
     });
 
-    if (eventToKeep.style.backgroundColor || eventToKeep.style.borderColor) {
+    if (eventToKeep._originalColor) {
       eventToKeep.originalStyle = eventToKeep.originalStyle || {
         backgroundImage: eventToKeep.style.backgroundImage,
         backgroundSize: eventToKeep.style.backgroundSize,
+        backgroundColor: eventToKeep.style.backgroundColor,
         left: eventToKeep.style.left,
         right: eventToKeep.style.right,
         visibility: eventToKeep.style.visibility,
@@ -138,20 +143,55 @@ const eventHandlers = {
 
   merge: (mainCalendar) => {
     const eventSets = {};
+    const positionSets = {};
     const days = mainCalendar.querySelectorAll('[role="gridcell"]');
     days.forEach((day, index) => {
       const events = Array.from(day.querySelectorAll('[data-eventid][role="button"], [data-eventid] [role="button"]'));
       events.forEach((event) => {
         const eventTitleEls = event.querySelectorAll('[aria-hidden="true"]');
         if (!eventTitleEls.length) return;
-        let eventKey = Array.from(eventTitleEls)
+        const title = Array.from(eventTitleEls)
           .map((el) => el.textContent)
           .join('')
           .replace(/\s+/g, '');
-        eventKey = index + '_' + eventKey + event.style.height;
-        eventSets[eventKey] = eventSets[eventKey] || [];
-        eventSets[eventKey].push(event);
+        const titleKey = index + '_' + title + event.style.height;
+        event._titleKey = titleKey;
+        // Detect "busy" events from other calendars (text is "busy5 – 7am", no separator)
+        event._isBusy = Array.from(eventTitleEls).some(
+          (el) => /^busy([^a-z]|$)/i.test(el.textContent.trim())
+        );
+        eventSets[titleKey] = eventSets[titleKey] || [];
+        eventSets[titleKey].push(event);
+
+        // Track timed events by rendered position for busy-event merging
+        const rect = event.getBoundingClientRect();
+        const dayRect = day.getBoundingClientRect();
+        const relTop = Math.round(rect.top - dayRect.top);
+        const relHeight = Math.round(rect.height);
+        if (relHeight > 0) {
+          const posKey = index + '_' + relTop + '_' + relHeight;
+          event._posKey = posKey;
+          positionSets[posKey] = positionSets[posKey] || [];
+          positionSets[posKey].push(event);
+        }
       });
+    });
+
+    // Merge busy events into their position group
+    Object.values(positionSets).forEach((posEvents) => {
+      const hasBusy = posEvents.some((e) => e._isBusy);
+      if (!hasBusy || posEvents.length < 2) return;
+      // Remove these events from their title-based groups
+      posEvents.forEach((event) => {
+        const group = eventSets[event._titleKey];
+        if (group) {
+          const idx = group.indexOf(event);
+          if (idx !== -1) group.splice(idx, 1);
+          if (group.length === 0) delete eventSets[event._titleKey];
+        }
+      });
+      // Add as a merged group with a position-based key
+      eventSets['_busy_' + posEvents[0]._posKey] = posEvents;
     });
 
     Object.values(eventSets).forEach((events) => {
