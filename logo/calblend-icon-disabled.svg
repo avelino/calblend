@@ -1,9 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <!-- Disabled state: grayscale version -->
-  <!-- Back card -->
-  <rect x="10" y="4" width="30" height="30" rx="6" fill="#9CA3AF" opacity="0.4"/>
-  <!-- Front card (offset) -->
-  <rect x="8" y="14" width="30" height="30" rx="6" fill="#6B7280"/>
-  <!-- Overlap zone -->
-  <rect x="10" y="14" width="28" height="20" rx="4" fill="white" opacity="0.1"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><rect width="30" height="30" x="10" y="4" fill="#9CA3AF" opacity=".4" rx="6"/><rect width="30" height="30" x="8" y="14" fill="#6B7280" rx="6"/><rect width="28" height="20" x="10" y="14" fill="#fff" opacity=".1" rx="4"/></svg>

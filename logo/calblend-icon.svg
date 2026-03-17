@@ -1,18 +1,1 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="48" height="48">
-  <defs>
-    <linearGradient id="blend" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#6366F1"/>
-      <stop offset="100%" stop-color="#8B5CF6"/>
-    </linearGradient>
-    <linearGradient id="blend2" x1="1" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#3B82F6"/>
-      <stop offset="100%" stop-color="#6366F1"/>
-    </linearGradient>
-  </defs>
-  <!-- Back card -->
-  <rect x="10" y="4" width="30" height="30" rx="6" fill="url(#blend2)" opacity="0.6"/>
-  <!-- Front card (offset) -->
-  <rect x="8" y="14" width="30" height="30" rx="6" fill="url(#blend)"/>
-  <!-- Overlap/merge zone — lighter blend -->
-  <rect x="10" y="14" width="28" height="20" rx="4" fill="white" opacity="0.15"/>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48"><defs><linearGradient id="blend" x1="0" x2="1" y1="0" y2="1"><stop offset="0%" stop-color="#6366F1"/><stop offset="100%" stop-color="#8B5CF6"/></linearGradient><linearGradient id="blend2" x1="1" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="#3B82F6"/><stop offset="100%" stop-color="#6366F1"/></linearGradient></defs><rect width="30" height="30" x="10" y="4" fill="url(#blend2)" opacity=".6" rx="6"/><rect width="30" height="30" x="8" y="14" fill="url(#blend)" rx="6"/><rect width="28" height="20" x="10" y="14" fill="#fff" opacity=".15" rx="4"/></svg>
