@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "Власний...",
     "description": "Обрати власний колір"
+  },
+  "popupSectionVisual": {
+    "message": "Вигляд",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "Макет",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "Розумне",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "Злиття",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "Тема",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "Заокруглені Кути",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "Тінь",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "Анімації",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "Шрифт",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "М'які Кольори",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "Лінія Часу",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "М'яка сітка",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "Сучасний UI",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "Чиста Панель",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "Чисте Заголовок",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "Міні-Календар",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "Режим Фокусу",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "Наступна Подія",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "Конфлікти",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

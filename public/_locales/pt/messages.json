@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "Personalizar...",
     "description": "Escolher cor personalizada"
+  },
+  "popupSectionVisual": {
+    "message": "Visual",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "Layout",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "Inteligente",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "Mesclar",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "Tema",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "Bordas Arredondadas",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "Sombra",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "Animações",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "Tipografia",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "Cores Suaves",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "Linha do Tempo",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "Grade Suave",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "UI Moderna",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "Barra Limpa",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "Cabeçalho Limpo",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "Esmaecer Mini Cal",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "Modo Foco",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "Próximo Evento",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "Conflitos",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

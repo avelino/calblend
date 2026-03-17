@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "Kustom...",
     "description": "Pilih warna sendiri"
+  },
+  "popupSectionVisual": {
+    "message": "Visual",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "Tata Letak",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "Cerdas",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "Gabung",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "Tema",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "Sudut Bulat",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "Bayangan",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "Animasi",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "Tipografi",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "Warna Lembut",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "Garis Waktu",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "Grid Halus",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "UI Modern",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "Sidebar Bersih",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "Header Bersih",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "Redupkan Mini Cal",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "Mode Fokus",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "Acara Berikut",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "Konflik",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

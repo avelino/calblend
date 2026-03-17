@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "กำหนดเอง...",
     "description": "เลือกสีเอง"
+  },
+  "popupSectionVisual": {
+    "message": "ภาพ",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "เค้าโครง",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "อัจฉริยะ",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "รวม",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "ธีม",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "มุมมน",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "เงา",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "แอนิเมชัน",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "ตัวอักษร",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "สีนุ่ม",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "เส้นเวลา",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "กริดนุ่ม",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "UI สมัยใหม่",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "แถบข้างสะอาด",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "ส่วนหัวสะอาด",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "หรี่ปฏิทินเล็ก",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "โหมดโฟกัส",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "กิจกรรมถัดไป",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "ขัดแย้ง",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

@@ -1,112 +1,166 @@
 {
-  "popupLightThemeColor": {
-    "message": "Light Theme Weekend Color",
-    "description": "Label for light theme weekend color selection"
-  }
-,
-  "popupGradientOpacity": {
-    "message": "Gradient Opacity",
-    "description": "Label for the gradient opacity slider"
-  }
-,
-  "popupColorDefaultDark": {
-    "message": "Default Dark",
-    "description": "Preset color option for dark theme"
-  }
-,
-  "popupThemeSystem": {
-    "message": "System Default",
-    "description": "Option to use system theme settings"
-  }
-,
-  "popupEnableWeekends": {
-    "message": "Color Weekends",
-    "description": "Label for the weekend coloring toggle switch"
-  }
-,
-  "popupEnableExtension": {
-    "message": "Enable Extension",
-    "description": "Label for the extension enable/disable toggle switch"
-  }
-,
-  "popupColorLightGray": {
-    "message": "Light Gray",
-    "description": "Preset color option for light theme"
-  }
-,
-  "popupColorWarmBeige": {
-    "message": "Warm Beige",
-    "description": "Preset color option for light theme"
-  }
-,
-  "popupThemeLight": {
-    "message": "Light",
-    "description": "Option for light theme"
-  }
-,
-  "popupColorCharcoal": {
-    "message": "Charcoal",
-    "description": "Preset color option for dark theme"
-  }
-,
-  "popupThemeDark": {
-    "message": "Dark",
-    "description": "Option for dark theme"
-  }
-,
   "extensionName": {
     "message": "CalBlend for Google Calendar™",
     "description": "Name of the extension that blends overlapping calendar events with gradients."
-  }
-,
-  "popupColorSoftPurple": {
-    "message": "Soft Purple",
-    "description": "Preset color option for light theme"
-  }
-,
-  "popupColorSoftBlack": {
-    "message": "Soft Black",
-    "description": "Preset color option for dark theme"
-  }
-,
-  "popupColorBlueGray": {
-    "message": "Blue Gray",
-    "description": "Preset color option for dark theme"
-  }
-,
-  "popupColorNavyDark": {
-    "message": "Navy Dark",
-    "description": "Preset color option for dark theme"
-  }
-,
-  "popupColorMintGreen": {
-    "message": "Mint Green",
-    "description": "Preset color option for light theme"
-  }
-,
+  },
   "extensionDescription": {
     "message": "Merges duplicate Google Calendar events into one rainbow and colors the weekends.",
     "description": "Description explaining the extension's main functionality."
-  }
-,
-  "popupColorDefaultBlue": {
-    "message": "Default Blue",
-    "description": "Preset color option for light theme"
-  }
-,
+  },
+  "popupEnableExtension": {
+    "message": "Enable Extension",
+    "description": "Label for the extension enable/disable toggle switch"
+  },
+  "popupEnableWeekends": {
+    "message": "Color Weekends",
+    "description": "Label for the weekend coloring toggle switch"
+  },
+  "popupGradientOpacity": {
+    "message": "Gradient Opacity",
+    "description": "Label for the gradient opacity slider"
+  },
   "popupThemeSelect": {
     "message": "Theme",
     "description": "Label for the theme selection dropdown"
-  }
-,
+  },
+  "popupThemeSystem": {
+    "message": "System Default",
+    "description": "Option to use system theme settings"
+  },
+  "popupThemeLight": {
+    "message": "Light",
+    "description": "Option for light theme"
+  },
+  "popupThemeDark": {
+    "message": "Dark",
+    "description": "Option for dark theme"
+  },
+  "popupLightThemeColor": {
+    "message": "Light Theme Weekend Color",
+    "description": "Label for light theme weekend color selection"
+  },
   "popupDarkThemeColor": {
     "message": "Dark Theme Weekend Color",
     "description": "Label for dark theme weekend color selection"
-  }
-,
+  },
   "popupColorCustom": {
     "message": "Custom...",
     "description": "Option for custom color selection"
+  },
+  "popupColorDefaultBlue": {
+    "message": "Default Blue",
+    "description": "Preset color option for light theme"
+  },
+  "popupColorLightGray": {
+    "message": "Light Gray",
+    "description": "Preset color option for light theme"
+  },
+  "popupColorWarmBeige": {
+    "message": "Warm Beige",
+    "description": "Preset color option for light theme"
+  },
+  "popupColorSoftPurple": {
+    "message": "Soft Purple",
+    "description": "Preset color option for light theme"
+  },
+  "popupColorMintGreen": {
+    "message": "Mint Green",
+    "description": "Preset color option for light theme"
+  },
+  "popupColorDefaultDark": {
+    "message": "Default Dark",
+    "description": "Preset color option for dark theme"
+  },
+  "popupColorSoftBlack": {
+    "message": "Soft Black",
+    "description": "Preset color option for dark theme"
+  },
+  "popupColorBlueGray": {
+    "message": "Blue Gray",
+    "description": "Preset color option for dark theme"
+  },
+  "popupColorNavyDark": {
+    "message": "Navy Dark",
+    "description": "Preset color option for dark theme"
+  },
+  "popupColorCharcoal": {
+    "message": "Charcoal",
+    "description": "Preset color option for dark theme"
+  },
+  "popupSectionVisual": {
+    "message": "Visual",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "Layout",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "Smart",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "Merge",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "Theme",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "Rounded Events",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "Event Shadow",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "Animations",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "Typography",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "Soft Colors",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "Time Line",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "Soft Grid",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "Modern UI",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "Clean Sidebar",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "Clean Header",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "Dim Mini Cal",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "Focus Mode",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "Next Event",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "Conflicts",
+    "description": "Toggle to show warning badge on conflicting events"
   }
-
 }

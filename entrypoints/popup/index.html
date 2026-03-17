@@ -4,14 +4,24 @@
   <title>CalBlend Settings</title>
   <style>
     body {
-      width: 300px;
-      padding: 15px;
+      width: 320px;
+      padding: 16px;
       font-family: system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
     }
     .container {
       display: flex;
       flex-direction: column;
-      gap: 15px;
+      gap: 12px;
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6366f1;
+      margin-bottom: -4px;
     }
     .setting-row {
       display: flex;
@@ -39,8 +49,8 @@
       text-align: left;
     }
     .divider {
-      border-top: 1px solid #ccc;
-      margin: 5px 0;
+      border-top: 1px solid #e5e7eb;
+      margin: 4px 0;
     }
     .setting-group {
       display: flex;
@@ -95,6 +105,21 @@
     .hex-input.invalid {
       color: #dc3545;
     }
+    .toggle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+    .toggle-grid label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .toggle-grid input[type="checkbox"] {
+      margin: 0;
+    }
   </style>
 </head>
 <body>
@@ -105,7 +130,88 @@
         <span id="enableText"></span>
       </label>
     </div>
+
     <div class="divider"></div>
+
+    <!-- Visual Features -->
+    <div class="section-label" id="sectionVisual"></div>
+    <div class="toggle-grid">
+      <label>
+        <input type="checkbox" id="roundedEvents" />
+        <span id="roundedEventsText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="eventShadow" />
+        <span id="eventShadowText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="smoothAnimations" />
+        <span id="smoothAnimationsText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="improvedTypography" />
+        <span id="improvedTypographyText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="refinedColors" />
+        <span id="refinedColorsText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="refinedTimeLine" />
+        <span id="refinedTimeLineText"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Layout Features -->
+    <div class="section-label" id="sectionLayout"></div>
+    <div class="toggle-grid">
+      <label>
+        <input type="checkbox" id="softGrid" />
+        <span id="softGridText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="modernUI" />
+        <span id="modernUIText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="cleanSidebar" />
+        <span id="cleanSidebarText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="cleanHeader" />
+        <span id="cleanHeaderText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="dimMiniCalendar" />
+        <span id="dimMiniCalendarText"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Smart Features -->
+    <div class="section-label" id="sectionSmart"></div>
+    <div class="toggle-grid">
+      <label>
+        <input type="checkbox" id="focusMode" />
+        <span id="focusModeText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="highlightNextEvent" />
+        <span id="highlightNextEventText"></span>
+      </label>
+      <label>
+        <input type="checkbox" id="conflictIndicator" />
+        <span id="conflictIndicatorText"></span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <!-- Merge Settings -->
+    <div class="section-label" id="sectionMerge"></div>
     <div class="toggle-row">
       <label>
         <input type="checkbox" id="enableWeekends" />
@@ -119,7 +225,11 @@
         <span id="opacityValue" class="value"></span>
       </div>
     </div>
+
     <div class="divider"></div>
+
+    <!-- Theme Settings -->
+    <div class="section-label" id="sectionTheme"></div>
     <div class="setting-group">
       <label for="theme-select" id="themeSelectLabel"></label>
       <select id="theme-select">

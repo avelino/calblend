@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "직접 선택...",
     "description": "사용자 지정 색상"
+  },
+  "popupSectionVisual": {
+    "message": "시각",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "레이아웃",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "스마트",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "병합",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "테마",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "둥근 이벤트",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "그림자",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "애니메이션",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "글꼴",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "부드러운 색상",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "시간선",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "부드러운 격자",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "모던 UI",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "사이드바 정리",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "헤더 정리",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "미니 캘린더",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "집중 모드",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "다음 일정",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "충돌",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

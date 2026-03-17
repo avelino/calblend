@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "कस्टम...",
     "description": "अपना रंग चुनें"
+  },
+  "popupSectionVisual": {
+    "message": "दृश्य",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "लेआउट",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "स्मार्ट",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "मर्ज",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "थीम",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "गोल किनारे",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "छाया",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "एनिमेशन",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "फ़ॉन्ट",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "मुलायम रंग",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "समय रेखा",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "सॉफ्ट ग्रिड",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "आधुनिक UI",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "साफ़ साइडबार",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "साफ़ हेडर",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "मिनी कैलेंडर",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "फ़ोकस मोड",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "अगला इवेंट",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "टकराव",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

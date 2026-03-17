@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "مخصص...",
     "description": "اختيار لون مخصص"
+  },
+  "popupSectionVisual": {
+    "message": "مرئي",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "تخطيط",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "ذكي",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "دمج",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "المظهر",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "حواف مستديرة",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "ظل",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "حركات",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "خط",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "ألوان ناعمة",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "خط الوقت",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "شبكة ناعمة",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "واجهة حديثة",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "شريط نظيف",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "رأس نظيف",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "إخفاء التقويم",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "وضع التركيز",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "الحدث التالي",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "تعارضات",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

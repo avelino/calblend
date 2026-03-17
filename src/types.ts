@@ -5,6 +5,23 @@ export interface ExtensionSettings {
   theme: 'system' | 'light' | 'dark';
   lightThemeColor: string;
   darkThemeColor: string;
+  // Visual features
+  roundedEvents: boolean;
+  eventShadow: boolean;
+  smoothAnimations: boolean;
+  improvedTypography: boolean;
+  refinedColors: boolean;
+  // Layout features
+  softGrid: boolean;
+  modernUI: boolean;
+  cleanSidebar: boolean;
+  cleanHeader: boolean;
+  dimMiniCalendar: boolean;
+  refinedTimeLine: boolean;
+  // Smart features
+  focusMode: boolean;
+  highlightNextEvent: boolean;
+  conflictIndicator: boolean;
 }
 
 export const DEFAULT_SETTINGS: ExtensionSettings = {
@@ -14,6 +31,20 @@ export const DEFAULT_SETTINGS: ExtensionSettings = {
   theme: 'system',
   lightThemeColor: '#f1f6ff',
   darkThemeColor: '#1a1a1a',
+  roundedEvents: true,
+  eventShadow: true,
+  smoothAnimations: true,
+  improvedTypography: true,
+  refinedColors: true,
+  softGrid: true,
+  modernUI: true,
+  cleanSidebar: true,
+  cleanHeader: true,
+  dimMiniCalendar: true,
+  refinedTimeLine: true,
+  focusMode: true,
+  highlightNextEvent: true,
+  conflictIndicator: true,
 };
 
 export interface CalendarEvent {

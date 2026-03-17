@@ -1,4 +1,5 @@
 import { loadSettings, saveSettings } from '@/src/storage';
+import type { ExtensionSettings } from '@/src/types';
 
 function $(id: string): HTMLElement {
   return document.getElementById(id)!;
@@ -35,7 +36,46 @@ const translations: Record<string, string> = {
   colorBlueGrayOption: 'popupColorBlueGray',
   colorNavyDarkOption: 'popupColorNavyDark',
   colorCharcoalOption: 'popupColorCharcoal',
+  // Section labels
+  sectionVisual: 'popupSectionVisual',
+  sectionLayout: 'popupSectionLayout',
+  sectionSmart: 'popupSectionSmart',
+  sectionMerge: 'popupSectionMerge',
+  sectionTheme: 'popupSectionTheme',
+  // Feature toggles
+  roundedEventsText: 'popupRoundedEvents',
+  eventShadowText: 'popupEventShadow',
+  smoothAnimationsText: 'popupSmoothAnimations',
+  improvedTypographyText: 'popupImprovedTypography',
+  refinedColorsText: 'popupRefinedColors',
+  refinedTimeLineText: 'popupRefinedTimeLine',
+  softGridText: 'popupSoftGrid',
+  modernUIText: 'popupModernUI',
+  cleanSidebarText: 'popupCleanSidebar',
+  cleanHeaderText: 'popupCleanHeader',
+  dimMiniCalendarText: 'popupDimMiniCalendar',
+  focusModeText: 'popupFocusMode',
+  highlightNextEventText: 'popupHighlightNextEvent',
+  conflictIndicatorText: 'popupConflictIndicator',
 };
+
+// Feature toggle IDs mapped to their settings key
+const FEATURE_TOGGLES: Array<keyof ExtensionSettings> = [
+  'roundedEvents',
+  'eventShadow',
+  'smoothAnimations',
+  'improvedTypography',
+  'refinedColors',
+  'refinedTimeLine',
+  'softGrid',
+  'modernUI',
+  'cleanSidebar',
+  'cleanHeader',
+  'dimMiniCalendar',
+  'focusMode',
+  'highlightNextEvent',
+  'conflictIndicator',
+];
 
 interface ColorElements {
   preset: HTMLSelectElement;
@@ -97,6 +137,15 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   updateColor('light', settings.lightThemeColor);
   updateColor('dark', settings.darkThemeColor);
+
+  // Initialize feature toggles
+  for (const key of FEATURE_TOGGLES) {
+    const checkbox = $(key) as HTMLInputElement;
+    checkbox.checked = settings[key] as boolean;
+    checkbox.addEventListener('change', () => {
+      saveSettings({ [key]: checkbox.checked });
+    });
+  }
 
   enableExtension.addEventListener('change', () => {
     saveSettings({ enabled: enableExtension.checked });

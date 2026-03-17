@@ -5,6 +5,8 @@ import { applyMerge, restoreAll } from '@/src/event-merging';
 import { colorWeekends, colorMiniCalendar } from '@/src/weekend';
 import { getWeekendColor } from '@/src/colors';
 import { createCalendarObserver } from '@/src/observer';
+import { injectStyles, removeStyles } from '@/src/styles';
+import { applyFeatures, cleanupFeatures } from '@/src/features';
 
 export default defineContentScript({
   matches: [
@@ -56,10 +58,13 @@ export default defineContentScript({
       logoFinder.observe(document.body, { childList: true, subtree: true });
     }
 
+    // Inject CSS-based features
+    injectStyles(settings);
+
     function processMainCalendar(node: HTMLElement): void {
       // Restore all modified elements to clean DOM state before re-detecting.
-      // This prevents reading our own modifications (unset bg, hidden visibility, etc.)
       restoreAll();
+      cleanupFeatures();
 
       const events = findEvents(node);
       const groups = groupEvents(events);
@@ -74,6 +79,9 @@ export default defineContentScript({
         );
         colorWeekends(node, color);
       }
+
+      // Apply DOM-based features (focus mode, highlight, conflicts, etc.)
+      applyFeatures(settings, node, events, groups);
     }
 
     function processMiniCalendar(node: HTMLElement): void {
@@ -108,8 +116,13 @@ export default defineContentScript({
       settings = newSettings;
       if (!settings.enabled) {
         stop();
+        cleanupFeatures();
+        removeStyles();
+        restoreAll();
         return;
       }
+      // Update CSS features
+      injectStyles(settings);
       // Disconnect, process, reconnect — same pattern as the observer itself
       stop();
       processAll();

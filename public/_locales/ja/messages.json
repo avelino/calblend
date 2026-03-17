@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "カスタム...",
     "description": "カスタムカラーの選択"
+  },
+  "popupSectionVisual": {
+    "message": "ビジュアル",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "レイアウト",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "スマート",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "結合",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "テーマ",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "角丸イベント",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "影効果",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "アニメーション",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "フォント",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "柔らかい色",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "時刻線",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "ソフトグリッド",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "モダンUI",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "サイドバー整理",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "ヘッダー整理",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "ミニカレンダー",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "集中モード",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "次の予定",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "競合",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }

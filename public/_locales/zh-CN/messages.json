@@ -107,6 +107,82 @@
   "popupColorCustom": {
     "message": "自定义...",
     "description": "自定义颜色选择"
+  },
+  "popupSectionVisual": {
+    "message": "视觉",
+    "description": "Section header for visual feature settings"
+  },
+  "popupSectionLayout": {
+    "message": "布局",
+    "description": "Section header for layout feature settings"
+  },
+  "popupSectionSmart": {
+    "message": "智能",
+    "description": "Section header for smart feature settings"
+  },
+  "popupSectionMerge": {
+    "message": "合并",
+    "description": "Section header for merge feature settings"
+  },
+  "popupSectionTheme": {
+    "message": "主题",
+    "description": "Section header for theme settings"
+  },
+  "popupRoundedEvents": {
+    "message": "圆角事件",
+    "description": "Toggle for rounded corners on calendar events"
+  },
+  "popupEventShadow": {
+    "message": "阴影",
+    "description": "Toggle for subtle shadow on calendar events"
+  },
+  "popupSmoothAnimations": {
+    "message": "动画",
+    "description": "Toggle for smooth hover animations on events"
+  },
+  "popupImprovedTypography": {
+    "message": "字体",
+    "description": "Toggle for improved font styling on events"
+  },
+  "popupRefinedColors": {
+    "message": "柔和色彩",
+    "description": "Toggle for softer, more pastel event colors"
+  },
+  "popupRefinedTimeLine": {
+    "message": "时间线",
+    "description": "Toggle for refined current time indicator"
+  },
+  "popupSoftGrid": {
+    "message": "柔和网格",
+    "description": "Toggle for softer, near-invisible grid lines"
+  },
+  "popupModernUI": {
+    "message": "现代界面",
+    "description": "Toggle for modern scrollbar, buttons, and toolbar styling"
+  },
+  "popupCleanSidebar": {
+    "message": "简洁侧栏",
+    "description": "Toggle to auto-collapse sidebar, reveal on hover"
+  },
+  "popupCleanHeader": {
+    "message": "简洁顶栏",
+    "description": "Toggle to hide non-essential header elements"
+  },
+  "popupDimMiniCalendar": {
+    "message": "淡化小日历",
+    "description": "Toggle to dim mini calendar, restore on hover"
+  },
+  "popupFocusMode": {
+    "message": "专注模式",
+    "description": "Toggle to dim events from secondary calendars"
+  },
+  "popupHighlightNextEvent": {
+    "message": "下个事件",
+    "description": "Toggle to highlight the next upcoming event"
+  },
+  "popupConflictIndicator": {
+    "message": "冲突",
+    "description": "Toggle to show warning badge on conflicting events"
   }
 
 }
