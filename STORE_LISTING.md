@@ -65,5 +65,5 @@ Merges overlapping Google Calendar events from multiple calendars into a single 
 ## Privacy Policy (if required)
 
 ```
-Gradient Merge for Google Calendar does not collect, store, or transmit any personal data. All user preferences (theme, colors, opacity settings) are stored locally in your browser using the WebExtension storage API. The extension only accesses Google Calendar web pages to modify their visual appearance and does not read, collect, or share any calendar data.
+CalBlend for Google Calendar does not collect, store, or transmit any personal data. All user preferences (theme, colors, opacity settings) are stored locally in your browser using the WebExtension storage API. The extension only accesses Google Calendar web pages to modify their visual appearance and does not read, collect, or share any calendar data.
 ```

@@ -1,4 +1,4 @@
-##Gradient Merge Google Calendar Events
+## CalBlend — Google Calendar Event Merge
 
 
 ## Download [for Chrome]

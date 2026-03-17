@@ -55,8 +55,8 @@
   }
 ,
   "extensionName": {
-    "message": "Gradient Merge for Google Calendar™ Events",
-    "description": "Name of the extension that merges duplicate calendar events with gradients."
+    "message": "CalBlend for Google Calendar™",
+    "description": "Name of the extension that blends overlapping calendar events with gradients."
   }
 ,
   "popupColorSoftPurple": {

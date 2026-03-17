@@ -1,12 +1,12 @@
 # Privacy Policy
 
-**Gradient Merge for Google Calendar**
+**CalBlend for Google Calendar**
 
 *Last updated: January 2025*
 
 ## Overview
 
-Gradient Merge for Google Calendar ("the Extension") is committed to protecting your privacy. This privacy policy explains what information the Extension collects, how it is used, and what choices you have.
+CalBlend for Google Calendar ("the Extension") is committed to protecting your privacy. This privacy policy explains what information the Extension collects, how it is used, and what choices you have.
 
 **In short: We do not collect, transmit, or share any personal data.**
 
@@ -88,7 +88,7 @@ We may update this privacy policy from time to time. Any changes will be reflect
 
 If you have questions about this privacy policy, please open an issue on our GitHub repository:
 
-https://github.com/nickhudkins/gradient-gcal-event-merge
+https://github.com/avelino/calblend
 
 ## Summary
 
