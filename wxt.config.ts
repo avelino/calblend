@@ -25,7 +25,6 @@ export default defineConfig({
       {
         resources: ['icon-large.png'],
         matches: [
-          'https://www.google.com/calendar/*',
           'https://calendar.google.com/*',
         ],
       },

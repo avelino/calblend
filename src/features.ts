@@ -12,17 +12,22 @@ const CALBLEND_CLASSES = [
   'calblend-conflict-badge',
 ] as const;
 
+const CALBLEND_SELECTOR = CALBLEND_CLASSES.map((c) => `.${c}`).join(',');
+const REMOVABLE_CLASSES = new Set<string>(['calblend-conflict-badge', 'calblend-timeline-dot']);
+
 /**
  * Remove all CalBlend feature classes and injected elements from the DOM.
  */
 export function cleanupFeatures(): void {
-  for (const cls of CALBLEND_CLASSES) {
-    const elements = document.querySelectorAll(`.${cls}`);
-    for (const el of elements) {
-      el.classList.remove(cls);
-      // Remove injected badge/dot elements
-      if (cls === 'calblend-conflict-badge' || cls === 'calblend-timeline-dot') {
-        el.remove();
+  const elements = document.querySelectorAll(CALBLEND_SELECTOR);
+  for (const el of elements) {
+    for (const cls of CALBLEND_CLASSES) {
+      if (el.classList.contains(cls)) {
+        el.classList.remove(cls);
+        if (REMOVABLE_CLASSES.has(cls)) {
+          el.remove();
+          break;
+        }
       }
     }
   }
@@ -95,27 +100,25 @@ export function applyRefinedTimeLine(): void {
   const main = document.querySelector<HTMLElement>('[role="main"]');
   if (!main) return;
 
-  // The time indicator is typically a thin, absolutely positioned element
-  // with a red-ish background color, sitting inside the calendar grid.
-  // It spans the full width of a day column.
-  const allElements = main.querySelectorAll<HTMLElement>('div[aria-hidden="true"]');
+  // The time indicator is a thin, absolutely positioned element with a red background.
+  // Use a targeted selector to avoid scanning all aria-hidden elements.
+  const candidates = main.querySelectorAll<HTMLElement>(
+    '[data-datekey] div[aria-hidden="true"], [role="gridcell"] div[aria-hidden="true"]',
+  );
 
-  for (const el of allElements) {
-    const style = el.style;
-    const bg = style.backgroundColor || '';
-    const height = parseInt(style.height || '0', 10);
+  for (const el of candidates) {
+    const bg = el.style.backgroundColor || '';
+    const height = parseInt(el.style.height || '0', 10);
 
-    // Identify the time indicator: red background, very thin (1-3px), positioned absolutely
     const isRed = /rgb\(\s*2[0-2]\d\s*,\s*[0-5]\d\s*,\s*[0-5]\d\s*\)/.test(bg) ||
                   bg.includes('209, 68, 20') ||
                   bg.includes('234, 67, 53') ||
                   bg.includes('217, 48, 37');
 
-    if (isRed && height <= 4 && style.position === 'absolute') {
+    if (isRed && height <= 4 && el.style.position === 'absolute') {
       el.classList.add('calblend-timeline');
       el.style.backgroundColor = 'transparent';
 
-      // Add the dot indicator if not already present
       if (!el.querySelector('.calblend-timeline-dot')) {
         const dot = document.createElement('div');
         dot.className = 'calblend-timeline-dot';
@@ -202,11 +205,13 @@ export function applyHighlightNextEvent(container: HTMLElement): void {
  * and they weren't grouped together.
  */
 export function applyConflictIndicator(groups: EventGroup[]): void {
-  // Build a map of positionKey → events across all groups
+  // Build event → groupKey lookup and positionKey → group keys map
+  const eventGroupKey = new Map<CalendarEvent, string>();
   const positionMap = new Map<string, CalendarEvent[]>();
 
   for (const group of groups) {
     for (const event of group.events) {
+      eventGroupKey.set(event, group.key);
       if (!event.positionKey) continue;
       const existing = positionMap.get(event.positionKey) ?? [];
       existing.push(event);
@@ -218,15 +223,13 @@ export function applyConflictIndicator(groups: EventGroup[]): void {
   for (const [, events] of positionMap) {
     if (events.length <= 1) continue;
 
-    // Check if these events are from different groups
     const groupKeys = new Set<string>();
     for (const event of events) {
-      const group = groups.find((g) => g.events.includes(event));
-      if (group) groupKeys.add(group.key);
+      const key = eventGroupKey.get(event);
+      if (key) groupKeys.add(key);
     }
 
     if (groupKeys.size > 1) {
-      // These are genuinely conflicting events
       for (const event of events) {
         event.element.classList.add('calblend-conflict');
         if (!event.element.querySelector('.calblend-conflict-badge')) {
