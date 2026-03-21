@@ -1,0 +1,14 @@
+baseURL = "https://calblend.app/"
+languageCode = "en"
+title = "CalBlend — Merge Your Calendars, Simplify Your Day"
+
+[params]
+  description = "CalBlend merges overlapping Google Calendar events into beautiful gradient blocks. One view. Zero clutter. Pure productivity."
+  tagline = "Merge Your Calendars, Simplify Your Day"
+  chromeURL = "https://chrome.google.com/webstore"
+  firefoxURL = "https://addons.mozilla.org"
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

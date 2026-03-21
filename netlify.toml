@@ -1,0 +1,20 @@
+[build]
+  base = "site"
+  publish = "site/public"
+  command = "hugo --minify"
+
+[build.environment]
+  HUGO_VERSION = "0.158.0"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[[redirects]]
+  from = "https://calblend.netlify.app/*"
+  to = "https://calblend.app/:splat"
+  status = 301
+  force = true

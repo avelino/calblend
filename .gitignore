@@ -12,3 +12,6 @@ node_modules/
 
 # WXT generated
 .wxt/
+
+# site
+site/public/
