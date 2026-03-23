@@ -514,14 +514,15 @@ pub fn run() {
         })
         .build(tauri::generate_context!())
         .expect("error while building CalBlend")
-        .run(|app_handle, event| {
+        .run(|_app_handle, _event| {
+            #[cfg(target_os = "macos")]
             if let tauri::RunEvent::Reopen {
                 has_visible_windows,
                 ..
-            } = event
+            } = _event
             {
                 if !has_visible_windows {
-                    show_main_window(app_handle);
+                    show_main_window(_app_handle);
                 }
             }
         });
