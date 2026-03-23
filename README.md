@@ -15,6 +15,49 @@ Merges overlapping Google Calendar events from multiple calendars into a single 
 
 ## Install
 
+### Desktop App
+
+**macOS** (Homebrew):
+```bash
+brew install avelino/calblend/calblend@beta
+```
+
+**Windows** (Scoop):
+```bash
+scoop bucket add calblend https://github.com/avelino/scoop-calblend
+scoop install calblend-beta
+```
+
+**Windows** (Winget):
+```bash
+winget install avelino.CalBlend.Beta
+```
+
+**Windows** (Chocolatey):
+```bash
+choco install calblend-beta
+```
+
+**Linux** (AUR):
+```bash
+yay -S calblend-beta-bin
+```
+
+**Linux** (Snap):
+```bash
+snap install calblend --edge
+```
+
+**Linux** (Flatpak):
+```bash
+flatpak install run.avelino.calblend
+```
+
+**Linux** (DEB/RPM) and **direct download** for all platforms:
+[GitHub Releases](https://github.com/avelino/calblend/releases/tag/beta)
+
+### Browser Extension
+
 - [Chrome Web Store](#) *(coming soon)*
 - [Firefox Add-ons](#) *(coming soon)*
 
