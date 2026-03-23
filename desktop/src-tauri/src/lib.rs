@@ -3,11 +3,13 @@ use std::sync::Mutex;
 
 use serde::Deserialize;
 use tauri::{
-    menu::{MenuBuilder, MenuItemBuilder, PredefinedMenuItem, SubmenuBuilder},
+    menu::{MenuBuilder, MenuItemBuilder},
     tray::{TrayIconBuilder, TrayIconEvent, MouseButton, MouseButtonState},
     webview::WebviewWindowBuilder,
     Manager, WebviewUrl,
 };
+#[cfg(target_os = "macos")]
+use tauri::menu::{PredefinedMenuItem, SubmenuBuilder};
 use tauri_plugin_autostart::MacosLauncher;
 use tauri_plugin_global_shortcut::GlobalShortcutExt;
 use tauri_plugin_notification::NotificationExt;
