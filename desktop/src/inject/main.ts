@@ -20,6 +20,7 @@ import { DEFAULT_SETTINGS } from '@calblend/types';
 import type { ExtensionSettings } from '@calblend/types';
 import { initNotifications } from './notifications';
 import { initTrayEvents } from './tray-events';
+import { initBranding } from './branding';
 
 async function initCalBlend(): Promise<void> {
   let settings: ExtensionSettings;
@@ -101,7 +102,8 @@ async function initCalBlend(): Promise<void> {
     start();
   });
 
-  // Initialize native OS notifications + tray event scanner
+  // Initialize native OS features
+  initBranding();
   initNotifications();
   initTrayEvents();
 
