@@ -122,7 +122,7 @@ The observer disconnects before applying DOM changes and reconnects after, preve
 
 ## Credits
 
-Originally forked from [@imightbeAmy](https://github.com/nickhudkins/gradient-gcal-event-merge).
+Originally forked from [@limonkufu](https://github.com/limonkufu/gradient-gcal-event-merge/pull/2).
 
 ## License
 
