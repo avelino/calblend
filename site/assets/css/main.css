@@ -978,6 +978,11 @@ h3 {
   color: var(--indigo);
 }
 
+.footer-separator {
+  margin: 0 6px;
+  color: var(--border);
+}
+
 .footer-links {
   display: flex;
   gap: 24px;
