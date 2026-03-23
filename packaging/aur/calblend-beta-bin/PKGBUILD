@@ -1,0 +1,41 @@
+# Maintainer: Avelino <t@avelino.run>
+pkgname=calblend-beta-bin
+pkgver=0.1.0
+pkgrel=1
+pkgdesc="CalBlend Beta — Merge your Google Calendars into a single view"
+arch=('x86_64')
+url="https://calblend.app"
+license=('MIT')
+depends=('webkit2gtk-4.1' 'libappindicator-gtk3' 'librsvg')
+provides=('calblend')
+conflicts=('calblend' 'calblend-bin')
+source=("${pkgname}-${pkgver}.AppImage::https://github.com/avelino/calblend/releases/download/beta/CalBlend_${pkgver}_amd64.AppImage")
+sha256sums=('SKIP')
+options=('!strip')
+
+prepare() {
+  chmod +x "${pkgname}-${pkgver}.AppImage"
+  "./${pkgname}-${pkgver}.AppImage" --appimage-extract
+}
+
+package() {
+  install -d "${pkgdir}/opt/calblend"
+  cp -r squashfs-root/* "${pkgdir}/opt/calblend/"
+
+  install -d "${pkgdir}/usr/bin"
+  ln -s /opt/calblend/AppRun "${pkgdir}/usr/bin/calblend"
+
+  install -d "${pkgdir}/usr/share/applications"
+  cat > "${pkgdir}/usr/share/applications/calblend.desktop" << EOF
+[Desktop Entry]
+Name=CalBlend Beta
+Comment=Merge your Google Calendars into a single view
+Exec=/usr/bin/calblend
+Icon=/opt/calblend/calblend.png
+Type=Application
+Categories=Office;Calendar;Productivity;
+StartupWMClass=CalBlend
+EOF
+
+  install -Dm644 squashfs-root/*.png "${pkgdir}/usr/share/pixmaps/calblend.png" 2>/dev/null || true
+}

@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://aka.ms/winget-manifest.singleton.1.6.0.schema.json
+PackageIdentifier: avelino.CalBlend.Beta
+PackageVersion: 0.1.0
+PackageName: CalBlend Beta
+Publisher: Avelino
+License: MIT
+ShortDescription: Merge your Google Calendars into a single view
+PackageUrl: https://calblend.app
+InstallerType: msi
+Installers:
+  - Architecture: x64
+    InstallerUrl: https://github.com/avelino/calblend/releases/download/beta/CalBlend_0.1.0_x64_en-US.msi
+    InstallerSha256: __SHA256__
+ManifestType: singleton
+ManifestVersion: 1.6.0

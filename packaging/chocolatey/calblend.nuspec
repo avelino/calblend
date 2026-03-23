@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.chocolatey.org/packaging/2015/06/nuspec.xsd">
+  <metadata>
+    <id>calblend-beta</id>
+    <version>0.1.0-beta</version>
+    <title>CalBlend Beta</title>
+    <authors>Avelino</authors>
+    <owners>avelino</owners>
+    <projectUrl>https://calblend.app</projectUrl>
+    <iconUrl>https://calblend.app/images/icon.png</iconUrl>
+    <licenseUrl>https://github.com/avelino/calblend/blob/main/LICENSE</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>CalBlend Beta — Merge your Google Calendars into a single view. Overlay multiple Google Calendar accounts in one unified calendar.</description>
+    <summary>Merge your Google Calendars into a single view</summary>
+    <tags>calendar google productivity</tags>
+    <packageSourceUrl>https://github.com/avelino/calblend</packageSourceUrl>
+    <bugTrackerUrl>https://github.com/avelino/calblend/issues</bugTrackerUrl>
+  </metadata>
+  <files>
+    <file src="tools\**" target="tools" />
+  </files>
+</package>

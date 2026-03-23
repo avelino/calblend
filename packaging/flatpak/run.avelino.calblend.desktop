@@ -1,0 +1,8 @@
+[Desktop Entry]
+Name=CalBlend
+Comment=Merge your Google Calendars into a single view
+Exec=calblend
+Icon=run.avelino.calblend
+Type=Application
+Categories=Office;Calendar;Productivity;
+StartupWMClass=CalBlend

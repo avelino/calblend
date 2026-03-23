@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>run.avelino.calblend</id>
+  <name>CalBlend</name>
+  <summary>Merge your Google Calendars into a single view</summary>
+  <metadata_license>MIT</metadata_license>
+  <project_license>MIT</project_license>
+  <description>
+    <p>
+      CalBlend overlays multiple Google Calendar accounts into one unified
+      calendar view. See all your events from different accounts without
+      switching between them.
+    </p>
+  </description>
+  <url type="homepage">https://calblend.app</url>
+  <url type="bugtracker">https://github.com/avelino/calblend/issues</url>
+  <launchable type="desktop-id">run.avelino.calblend.desktop</launchable>
+  <content_rating type="oars-1.1" />
+  <releases>
+    <release version="0.1.0" date="2026-03-23">
+      <description>
+        <p>Initial beta release</p>
+      </description>
+    </release>
+  </releases>
+</component>

@@ -1,0 +1,39 @@
+name: calblend
+base: core22
+version: '0.1.0-beta'
+summary: Merge your Google Calendars into a single view
+description: |
+  CalBlend overlays multiple Google Calendar accounts into one unified
+  calendar view. See all your events from different accounts without
+  switching between them.
+grade: devel
+confinement: strict
+architectures:
+  - build-on: [amd64]
+
+apps:
+  calblend:
+    command: calblend
+    extensions: [gnome]
+    plugs:
+      - browser-support
+      - network
+      - network-bind
+      - desktop
+      - desktop-legacy
+      - wayland
+      - x11
+      - unity7
+      - gsettings
+
+parts:
+  calblend:
+    plugin: dump
+    source: https://github.com/avelino/calblend/releases/download/beta/CalBlend_0.1.0_amd64.AppImage
+    source-type: file
+    build-packages:
+      - libfuse2
+    override-build: |
+      chmod +x CalBlend_0.1.0_amd64.AppImage
+      ./CalBlend_0.1.0_amd64.AppImage --appimage-extract
+      cp -r squashfs-root/* $CRAFT_PART_INSTALL/

@@ -1,0 +1,33 @@
+{
+  "version": "__VERSION__",
+  "description": "CalBlend — Merge your Google Calendars into a single view",
+  "homepage": "https://calblend.app",
+  "license": "MIT",
+  "architecture": {
+    "64bit": {
+      "url": "https://github.com/avelino/calblend/releases/download/v__VERSION__/CalBlend___VERSION___x64-setup.exe#/setup.exe",
+      "hash": "__SHA256__"
+    }
+  },
+  "installer": {
+    "script": [
+      "Start-Process '$dir\\setup.exe' -ArgumentList '/S' -Wait"
+    ]
+  },
+  "uninstaller": {
+    "script": [
+      "$uninstaller = Get-ChildItem \"$env:LOCALAPPDATA\\CalBlend\" -Filter 'unins*' -ErrorAction SilentlyContinue | Select-Object -First 1",
+      "if ($uninstaller) { Start-Process $uninstaller.FullName -ArgumentList '/S' -Wait }"
+    ]
+  },
+  "checkver": {
+    "github": "https://github.com/avelino/calblend"
+  },
+  "autoupdate": {
+    "architecture": {
+      "64bit": {
+        "url": "https://github.com/avelino/calblend/releases/download/v$version/CalBlend_${version}_x64-setup.exe#/setup.exe"
+      }
+    }
+  }
+}

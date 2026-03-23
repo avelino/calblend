@@ -1,0 +1,146 @@
+name: Publish Packages
+
+on:
+  workflow_run:
+    workflows: ["Desktop"]
+    types: [completed]
+    branches: [main]
+
+jobs:
+  publish-homebrew:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Update Homebrew tap
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          # Clone or create the tap repo
+          if gh repo view avelino/homebrew-calblend &>/dev/null; then
+            gh repo clone avelino/homebrew-calblend /tmp/homebrew-calblend
+          else
+            gh repo create avelino/homebrew-calblend --public --description "Homebrew tap for CalBlend"
+            mkdir -p /tmp/homebrew-calblend
+            cd /tmp/homebrew-calblend
+            git init
+            git remote add origin https://github.com/avelino/homebrew-calblend.git
+          fi
+
+          mkdir -p /tmp/homebrew-calblend/Casks
+          cp packaging/homebrew/Casks/calblend@beta.rb /tmp/homebrew-calblend/Casks/
+          cp packaging/homebrew/Casks/calblend.rb /tmp/homebrew-calblend/Casks/
+
+          cd /tmp/homebrew-calblend
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update CalBlend casks"
+            git push
+          fi
+
+  publish-scoop:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute SHA256
+        id: hash
+        run: |
+          curl -sL "https://github.com/avelino/calblend/releases/download/beta/CalBlend_0.1.0_x64-setup.exe" -o setup.exe
+          SHA=$(sha256sum setup.exe | cut -d' ' -f1)
+          echo "sha256=$SHA" >> "$GITHUB_OUTPUT"
+
+      - name: Update Scoop bucket
+        env:
+          GH_TOKEN: ${{ secrets.HOMEBREW_TAP_TOKEN }}
+        run: |
+          if gh repo view avelino/scoop-calblend &>/dev/null; then
+            gh repo clone avelino/scoop-calblend /tmp/scoop-calblend
+          else
+            gh repo create avelino/scoop-calblend --public --description "Scoop bucket for CalBlend"
+            mkdir -p /tmp/scoop-calblend
+            cd /tmp/scoop-calblend
+            git init
+            git remote add origin https://github.com/avelino/scoop-calblend.git
+          fi
+
+          cp packaging/scoop/calblend-beta.json /tmp/scoop-calblend/
+          sed -i "s|\"hash\": \"\"|\"hash\": \"${{ steps.hash.outputs.sha256 }}\"|" /tmp/scoop-calblend/calblend-beta.json
+
+          cd /tmp/scoop-calblend
+          git add -A
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "Update CalBlend beta manifest"
+            git push
+          fi
+
+  publish-winget:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute SHA256
+        id: hash
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/avelino/calblend/releases/download/beta/CalBlend_0.1.0_x64_en-US.msi" -OutFile setup.msi
+          $sha = (Get-FileHash setup.msi -Algorithm SHA256).Hash
+          "sha256=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Submit to winget-pkgs
+        env:
+          GH_TOKEN: ${{ secrets.WINGET_TOKEN }}
+        shell: pwsh
+        run: |
+          # Install wingetcreate
+          Invoke-WebRequest -Uri "https://aka.ms/wingetcreate/latest" -OutFile wingetcreate.exe
+
+          ./wingetcreate.exe update `
+            --submit `
+            --token "$env:GH_TOKEN" `
+            --urls "https://github.com/avelino/calblend/releases/download/beta/CalBlend_0.1.0_x64_en-US.msi" `
+            --version "0.1.0-beta" `
+            avelino.CalBlend.Beta
+
+  publish-chocolatey:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compute SHA256
+        id: hash
+        shell: pwsh
+        run: |
+          Invoke-WebRequest -Uri "https://github.com/avelino/calblend/releases/download/beta/CalBlend_0.1.0_x64_en-US.msi" -OutFile setup.msi
+          $sha = (Get-FileHash setup.msi -Algorithm SHA256).Hash
+          "sha256=$sha" | Out-File -FilePath $env:GITHUB_OUTPUT -Append
+
+      - name: Update checksum and pack
+        shell: pwsh
+        run: |
+          $content = Get-Content packaging/chocolatey/tools/chocolateyinstall.ps1
+          $content = $content -replace '__SHA256__', '${{ steps.hash.outputs.sha256 }}'
+          Set-Content packaging/chocolatey/tools/chocolateyinstall.ps1 $content
+
+          cd packaging/chocolatey
+          choco pack
+
+      - name: Push to Chocolatey
+        shell: pwsh
+        env:
+          CHOCO_API_KEY: ${{ secrets.CHOCO_API_KEY }}
+        run: |
+          cd packaging/chocolatey
+          choco push *.nupkg --source https://push.chocolatey.org/ --api-key "$env:CHOCO_API_KEY"
