@@ -7,6 +7,10 @@ title = "CalBlend — Merge Your Calendars, Simplify Your Day"
   tagline = "Merge Your Calendars, Simplify Your Day"
   chromeURL = "https://chrome.google.com/webstore"
   firefoxURL = "https://addons.mozilla.org"
+  desktopMacURL = "https://github.com/avelino/calblend/releases/latest"
+  desktopLinuxURL = "https://github.com/avelino/calblend/releases/latest"
+  desktopWindowsURL = "https://github.com/avelino/calblend/releases/latest"
+  issuesURL = "https://github.com/avelino/calblend/issues"
 
 [markup]
   [markup.goldmark]
