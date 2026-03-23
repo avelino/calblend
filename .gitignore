@@ -15,3 +15,8 @@ node_modules/
 
 # site
 site/public/
+
+# Desktop (Tauri)
+desktop/dist/
+desktop/src-tauri/target/
+desktop/src-tauri/gen/schemas/

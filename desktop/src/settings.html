@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CalBlend Settings</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      width: 100%;
+      padding: 20px;
+      font-family: system-ui, -apple-system, sans-serif;
+      font-size: 13px;
+      color: #1a1a1a;
+      background: #fafafa;
+    }
+    h1 {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #6366f1;
+    }
+    .container {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6366f1;
+      margin-bottom: -4px;
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .slider-container {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    input[type="range"] { flex: 1; }
+    .value {
+      min-width: 40px;
+      text-align: right;
+    }
+    .divider {
+      border-top: 1px solid #e5e7eb;
+      margin: 4px 0;
+    }
+    .setting-group {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .color-control {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      margin-top: 4px;
+    }
+    .color-preset {
+      flex: 1;
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .hex-input-wrapper {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      padding: 0 6px;
+      background: white;
+    }
+    .hex-input-wrapper span { color: #666; }
+    .hex-input {
+      width: 60px;
+      border: none;
+      padding: 6px 4px;
+      font-family: monospace;
+      outline: none;
+    }
+    .color-preview {
+      width: 24px;
+      height: 24px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .save-indicator {
+      opacity: 0;
+      color: #4CAF50;
+      font-size: 0.8em;
+      transition: opacity 0.3s ease;
+    }
+    .save-indicator.show { opacity: 1; }
+    .hex-input.invalid { color: #dc3545; }
+    .toggle-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 12px;
+    }
+    .toggle-grid label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .toggle-grid input[type="checkbox"] { margin: 0; }
+    select {
+      padding: 6px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    @media (prefers-color-scheme: dark) {
+      body { background: #1a1a1a; color: #e0e0e0; }
+      .divider { border-color: #333; }
+      .hex-input-wrapper { background: #2a2a2a; border-color: #444; }
+      .hex-input { background: transparent; color: #e0e0e0; }
+      .color-preset { background: #2a2a2a; border-color: #444; color: #e0e0e0; }
+      select { background: #2a2a2a; border-color: #444; color: #e0e0e0; }
+      .color-preview { border-color: #444; }
+    }
+  </style>
+</head>
+<body>
+  <h1>CalBlend Settings</h1>
+  <div class="container">
+    <div class="toggle-row">
+      <label>
+        <input type="checkbox" id="enableExtension" />
+        <span>Enable CalBlend</span>
+      </label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Visual</div>
+    <div class="toggle-grid">
+      <label><input type="checkbox" id="roundedEvents" /> <span>Rounded events</span></label>
+      <label><input type="checkbox" id="eventShadow" /> <span>Event shadows</span></label>
+      <label><input type="checkbox" id="smoothAnimations" /> <span>Smooth animations</span></label>
+      <label><input type="checkbox" id="improvedTypography" /> <span>Better typography</span></label>
+      <label><input type="checkbox" id="refinedColors" /> <span>Refined colors</span></label>
+      <label><input type="checkbox" id="refinedTimeLine" /> <span>Refined timeline</span></label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Layout</div>
+    <div class="toggle-grid">
+      <label><input type="checkbox" id="softGrid" /> <span>Soft grid</span></label>
+      <label><input type="checkbox" id="modernUI" /> <span>Modern UI</span></label>
+      <label><input type="checkbox" id="cleanSidebar" /> <span>Clean sidebar</span></label>
+      <label><input type="checkbox" id="cleanHeader" /> <span>Clean header</span></label>
+      <label><input type="checkbox" id="dimMiniCalendar" /> <span>Dim mini calendar</span></label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Smart</div>
+    <div class="toggle-grid">
+      <label><input type="checkbox" id="focusMode" /> <span>Focus mode</span></label>
+      <label><input type="checkbox" id="highlightNextEvent" /> <span>Highlight next</span></label>
+      <label><input type="checkbox" id="conflictIndicator" /> <span>Conflict indicator</span></label>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Merge</div>
+    <div class="toggle-row">
+      <label>
+        <input type="checkbox" id="enableWeekends" />
+        <span>Color weekends</span>
+      </label>
+    </div>
+    <div class="setting-group">
+      <label for="gradientOpacity">Gradient opacity</label>
+      <div class="slider-container">
+        <input type="range" id="gradientOpacity" min="0" max="1" step="0.05" />
+        <span id="opacityValue" class="value"></span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="section-label">Theme</div>
+    <div class="setting-group">
+      <label for="theme-select">Theme</label>
+      <select id="theme-select">
+        <option value="system">System</option>
+        <option value="light">Light</option>
+        <option value="dark">Dark</option>
+      </select>
+    </div>
+    <div class="setting-group">
+      <label>Light weekend color</label>
+      <div class="color-control">
+        <select id="light-color-preset" class="color-preset">
+          <option value="">Custom</option>
+          <option value="#f1f6ff">Default Blue</option>
+          <option value="#f5f5f5">Light Gray</option>
+          <option value="#fff3e0">Warm Beige</option>
+          <option value="#f3e5f5">Soft Purple</option>
+          <option value="#e8f5e9">Mint Green</option>
+        </select>
+        <div class="hex-input-wrapper">
+          <span>#</span>
+          <input type="text" id="light-hex-color" class="hex-input" maxlength="6" placeholder="f1f6ff">
+        </div>
+        <div class="color-preview" id="light-preview"></div>
+        <span class="save-indicator" id="light-saved">Saved!</span>
+      </div>
+    </div>
+    <div class="setting-group">
+      <label>Dark weekend color</label>
+      <div class="color-control">
+        <select id="dark-color-preset" class="color-preset">
+          <option value="">Custom</option>
+          <option value="#1a1a1a">Default Dark</option>
+          <option value="#2d2d2d">Soft Black</option>
+          <option value="#263238">Blue Gray</option>
+          <option value="#1b1b24">Navy Dark</option>
+          <option value="#2d2d2d">Charcoal</option>
+        </select>
+        <div class="hex-input-wrapper">
+          <span>#</span>
+          <input type="text" id="dark-hex-color" class="hex-input" maxlength="6" placeholder="1a1a1a">
+        </div>
+        <div class="color-preview" id="dark-preview"></div>
+        <span class="save-indicator" id="dark-saved">Saved!</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Settings page uses the same localStorage-based storage as the inject shim
+    const STORAGE_PREFIX = 'calblend_';
+    const STORAGE_KEY = 'settings';
+
+    const DEFAULT_SETTINGS = {
+      enabled: true,
+      gradientOpacity: 0.75,
+      weekendsEnabled: true,
+      theme: 'system',
+      lightThemeColor: '#f1f6ff',
+      darkThemeColor: '#1a1a1a',
+      roundedEvents: true,
+      eventShadow: true,
+      smoothAnimations: true,
+      improvedTypography: true,
+      refinedColors: true,
+      softGrid: true,
+      modernUI: true,
+      cleanSidebar: true,
+      cleanHeader: true,
+      dimMiniCalendar: true,
+      refinedTimeLine: true,
+      focusMode: true,
+      highlightNextEvent: true,
+      conflictIndicator: true,
+    };
+
+    function loadSettings() {
+      try {
+        const raw = localStorage.getItem(STORAGE_PREFIX + STORAGE_KEY);
+        const stored = raw ? JSON.parse(raw) : {};
+        return { ...DEFAULT_SETTINGS, ...stored };
+      } catch {
+        return { ...DEFAULT_SETTINGS };
+      }
+    }
+
+    function saveSettings(partial) {
+      const current = loadSettings();
+      const updated = { ...current, ...partial };
+      localStorage.setItem(STORAGE_PREFIX + STORAGE_KEY, JSON.stringify(updated));
+    }
+
+    function isValidHex(hex) {
+      return /^[0-9A-F]{6}$/i.test(hex);
+    }
+
+    function showSaveIndicator(el) {
+      el.classList.add('show');
+      setTimeout(() => el.classList.remove('show'), 2000);
+    }
+
+    const FEATURE_TOGGLES = [
+      'roundedEvents', 'eventShadow', 'smoothAnimations', 'improvedTypography',
+      'refinedColors', 'refinedTimeLine', 'softGrid', 'modernUI', 'cleanSidebar',
+      'cleanHeader', 'dimMiniCalendar', 'focusMode', 'highlightNextEvent', 'conflictIndicator',
+    ];
+
+    function getColorElements(theme) {
+      return {
+        preset: document.getElementById(theme + '-color-preset'),
+        hex: document.getElementById(theme + '-hex-color'),
+        preview: document.getElementById(theme + '-preview'),
+        saved: document.getElementById(theme + '-saved'),
+      };
+    }
+
+    function updateColor(theme, color, skipPreset) {
+      const els = getColorElements(theme);
+      const hexColor = color.replace('#', '');
+
+      if (!skipPreset) {
+        const hasOption = els.preset.querySelector('option[value="#' + hexColor + '"]');
+        els.preset.value = hasOption ? '#' + hexColor : '';
+      }
+
+      els.hex.value = hexColor;
+      els.preview.style.backgroundColor = '#' + hexColor;
+
+      if (isValidHex(hexColor)) {
+        els.hex.classList.remove('invalid');
+        const key = theme === 'light' ? 'lightThemeColor' : 'darkThemeColor';
+        saveSettings({ [key]: '#' + hexColor });
+        showSaveIndicator(els.saved);
+      } else {
+        els.hex.classList.add('invalid');
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      const settings = loadSettings();
+      const enableExtension = document.getElementById('enableExtension');
+      const enableWeekends = document.getElementById('enableWeekends');
+      const gradientOpacity = document.getElementById('gradientOpacity');
+      const opacityValue = document.getElementById('opacityValue');
+      const themeSelect = document.getElementById('theme-select');
+
+      enableExtension.checked = settings.enabled;
+      enableWeekends.checked = settings.weekendsEnabled;
+      gradientOpacity.value = String(settings.gradientOpacity);
+      opacityValue.textContent = String(settings.gradientOpacity);
+      themeSelect.value = settings.theme;
+
+      updateColor('light', settings.lightThemeColor);
+      updateColor('dark', settings.darkThemeColor);
+
+      for (const key of FEATURE_TOGGLES) {
+        const checkbox = document.getElementById(key);
+        checkbox.checked = settings[key];
+        checkbox.addEventListener('change', () => saveSettings({ [key]: checkbox.checked }));
+      }
+
+      enableExtension.addEventListener('change', () =>
+        saveSettings({ enabled: enableExtension.checked }));
+      enableWeekends.addEventListener('change', () =>
+        saveSettings({ weekendsEnabled: enableWeekends.checked }));
+      gradientOpacity.addEventListener('input', () => {
+        opacityValue.textContent = gradientOpacity.value;
+        saveSettings({ gradientOpacity: parseFloat(gradientOpacity.value) });
+      });
+      themeSelect.addEventListener('change', () =>
+        saveSettings({ theme: themeSelect.value }));
+
+      ['light', 'dark'].forEach((theme) => {
+        const els = getColorElements(theme);
+        els.preset.addEventListener('change', (e) => {
+          if (e.target.value) updateColor(theme, e.target.value);
+        });
+        els.hex.addEventListener('input', (e) => updateColor(theme, e.target.value, true));
+        els.hex.addEventListener('paste', (e) => {
+          e.preventDefault();
+          const paste = (e.clipboardData || window.clipboardData)?.getData('text');
+          if (!paste) return;
+          const cleaned = paste.replace('#', '').trim();
+          els.hex.value = cleaned;
+          updateColor(theme, cleaned, true);
+        });
+      });
+    });
+  </script>
+</body>
+</html>

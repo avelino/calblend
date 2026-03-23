@@ -1,0 +1,34 @@
+{
+  "$schema": "https://raw.githubusercontent.com/nickel-org/nickel.rs/master/schema/tauri-conf.json",
+  "productName": "CalBlend",
+  "identifier": "run.avelino.calblend",
+  "version": "0.1.0",
+  "build": {
+    "beforeBuildCommand": "pnpm build",
+    "beforeDevCommand": "pnpm build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "withGlobalTauri": true,
+    "windows": []
+  },
+  "plugins": {
+    "updater": {
+      "endpoints": [
+        "https://github.com/avelino/calblend/releases/latest/download/latest.json"
+      ],
+      "pubkey": ""
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": "all",
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  }
+}
