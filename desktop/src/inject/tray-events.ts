@@ -34,7 +34,7 @@ function isUserEditing(): boolean {
   ) !== null;
 }
 
-function parseTimeToMinutes(timeStr: string): number | null {
+export function parseTimeToMinutes(timeStr: string): number | null {
   const cleaned = timeStr.trim().toLowerCase();
 
   const match12 = cleaned.match(/^(\d{1,2})(?::(\d{2}))?\s*(am|pm)$/);
@@ -54,17 +54,18 @@ function parseTimeToMinutes(timeStr: string): number | null {
   return null;
 }
 
-function formatTime(minutes: number): string {
+export function formatTime(minutes: number): string {
   const h = Math.floor(minutes / 60);
   const m = minutes % 60;
   return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
 }
 
-function extractEventInfo(el: HTMLElement): { title: string; startMinutes: number } | null {
+export function extractEventInfo(el: HTMLElement): { title: string; startMinutes: number } | null {
   const ariaLabel = el.getAttribute('aria-label') ?? '';
 
   let startMinutes: number | null = null;
 
+  // Match time range: "10:30am – 12pm", "5:30 – 6:30am", "10am – 12pm"
   const ariaTimeMatch = ariaLabel.match(
     /(\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm))\s*[–\-]/,
   );
@@ -87,25 +88,24 @@ function extractEventInfo(el: HTMLElement): { title: string; startMinutes: numbe
 
   if (startMinutes === null) return null;
 
-  // Extract title: use aria-label but strip time/date portions
+  // Extract title from aria-label by removing the time range portion.
+  // aria-label formats:
+  //   "Retro + Planning, 10:30am – 12pm"
+  //   "Title, March 23, 5:30 – 6:30am"
+  //   "5:30 – 6:30am"  (no title)
   let title = '';
   if (ariaLabel) {
-    // aria-label formats:
-    //   "Title, March 23, 5:30 – 6:30am"
-    //   "Title, 5:30 – 6:30am"
-    //   "5:30 – 6:30am"  (no title)
-    // Strategy: take text before the first time pattern
-    const beforeTime = ariaLabel.match(
-      /^(.+?)(?:,\s*)?\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm|–|-)/,
+    // Remove the time range and everything after it
+    const cleaned = ariaLabel.replace(
+      /,?\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm)?\s*[–\-]\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm).*/i,
+      '',
     );
-    if (beforeTime?.[1]) {
-      // Remove trailing date parts ("March 23", "23 de março", etc.)
-      title = beforeTime[1]
-        .replace(/,\s*$/, '')
-        .replace(/,\s*\w+\s+\d{1,2}\s*$/, '')
-        .replace(/,\s*\d{1,2}\s+de\s+\w+\s*$/, '')
-        .trim();
-    }
+    // Remove trailing date parts ("March 23", "23 de março", etc.)
+    title = cleaned
+      .replace(/,\s*[A-Za-z\u00C0-\u024F]+\s+\d{1,2}\s*$/, '')
+      .replace(/,\s*\d{1,2}\s+de\s+[A-Za-z\u00C0-\u024F]+\s*$/, '')
+      .replace(/,\s*$/, '')
+      .trim();
   }
 
   // Fallback: first aria-hidden element that doesn't look like a time
@@ -113,7 +113,6 @@ function extractEventInfo(el: HTMLElement): { title: string; startMinutes: numbe
     const textEls = el.querySelectorAll<HTMLElement>('[aria-hidden="true"]');
     for (const textEl of textEls) {
       const text = textEl.textContent?.trim() ?? '';
-      // Skip time-like strings
       if (/^\d{1,2}(:\d{2})?\s*(AM|PM|am|pm|–|-)/i.test(text)) continue;
       if (/^\d{1,2}:\d{2}$/.test(text)) continue;
       if (!text || text.length < 2) continue;
@@ -122,13 +121,44 @@ function extractEventInfo(el: HTMLElement): { title: string; startMinutes: numbe
     }
   }
 
-  // Skip events with no meaningful title
   if (!title) return null;
-
-  // Skip busy events
   if (/^busy([^a-z]|$)/i.test(title)) return null;
 
   return { title, startMinutes };
+}
+
+/**
+ * Find today's column index (0-based) in the calendar grid.
+ * Returns -1 if today is not visible.
+ */
+function findTodayColumnIndex(): number {
+  const now = new Date();
+  const todayKey = ((now.getFullYear() - 1970) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
+
+  const dayCells = document.querySelectorAll<HTMLElement>('div[data-datekey]:not([jsaction])');
+  for (let i = 0; i < dayCells.length; i++) {
+    if (dayCells[i]!.getAttribute('data-datekey') === String(todayKey)) return i;
+  }
+  return -1;
+}
+
+/**
+ * Check if an event element belongs to today's column by comparing its
+ * horizontal position with the column headers.
+ */
+function isInTodayColumn(el: HTMLElement, todayIndex: number): boolean {
+  if (todayIndex < 0) return true; // today not visible, allow all
+
+  const headers = document.querySelectorAll<HTMLElement>('[role="columnheader"]');
+  if (todayIndex >= headers.length) return true;
+
+  const todayHeader = headers[todayIndex]!;
+  const headerRect = todayHeader.getBoundingClientRect();
+  const elRect = el.getBoundingClientRect();
+
+  // Event center X should be within the header column bounds
+  const elCenterX = elRect.left + elRect.width / 2;
+  return elCenterX >= headerRect.left && elCenterX <= headerRect.right;
 }
 
 function scanAndUpdate(): void {
@@ -137,6 +167,7 @@ function scanAndUpdate(): void {
 
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
+  const todayIndex = findTodayColumnIndex();
 
   const eventEls = document.querySelectorAll<HTMLElement>(
     '[data-eventid][role="button"], [data-eventid] > [role="button"]',
@@ -152,6 +183,9 @@ function scanAndUpdate(): void {
       '';
     if (!eventId || seen.has(eventId)) continue;
     seen.add(eventId);
+
+    // Skip events not in today's column
+    if (!isInTodayColumn(el, todayIndex)) continue;
 
     const info = extractEventInfo(el);
     if (!info) continue;
