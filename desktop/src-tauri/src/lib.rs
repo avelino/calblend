@@ -512,6 +512,17 @@ pub fn run() {
 
             Ok(())
         })
-        .run(tauri::generate_context!())
-        .expect("error while running CalBlend");
+        .build(tauri::generate_context!())
+        .expect("error while building CalBlend")
+        .run(|app_handle, event| {
+            if let tauri::RunEvent::Reopen {
+                has_visible_windows,
+                ..
+            } = event
+            {
+                if !has_visible_windows {
+                    show_main_window(app_handle);
+                }
+            }
+        });
 }
