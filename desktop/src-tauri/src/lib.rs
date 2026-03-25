@@ -136,7 +136,15 @@ fn update_tray_title(app: &tauri::AppHandle, events: &[UpcomingEvent]) {
     // Find next event that hasn't started yet (or just started)
     let next = events.iter().find(|e| e.minutes_until >= 0);
     let title = match next {
-        Some(ev) => ev.time.clone(),
+        Some(ev) => {
+            // Truncate title to keep menu bar compact
+            let name = if ev.title.len() > 20 {
+                format!("{}…", &ev.title[..ev.title.floor_char_boundary(18)])
+            } else {
+                ev.title.clone()
+            };
+            format!("{} {}", ev.time, name)
+        }
         None => String::new(),
     };
 

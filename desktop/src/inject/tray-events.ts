@@ -1,13 +1,13 @@
 /**
- * CalBlend Desktop — Tray event scanner.
+ * CalBlend Desktop — Tray event updater.
  *
- * Reads upcoming events from the Google Calendar DOM and sends them to the
- * Rust backend to display in the system tray menu.
+ * Primary: reads structured event data from the API interceptor.
+ * Fallback: scans Google Calendar DOM when API data is unavailable.
  *
- * IMPORTANT: This module is strictly read-only. It never modifies the DOM,
- * never triggers navigation, and pauses when the user is editing an event
- * (dialog open) to avoid any interference.
+ * Sends upcoming events to the Rust backend for the system tray menu.
  */
+
+import { getTodayUpcoming, hasData, onUpdate } from './calendar-data';
 
 declare const __TAURI__: {
   core: {
@@ -22,17 +22,58 @@ interface TrayEvent {
   event_id: string;
 }
 
-const SCAN_INTERVAL_MS = 60_000; // 1 minute — no need to be aggressive
+const SCAN_INTERVAL_MS = 60_000;
 
-/**
- * Returns true when the user is actively editing/creating an event.
- * We skip scanning to avoid any chance of interfering.
- */
+// ── Shared helpers ───────────────────────────────────────────────────
+
 function isUserEditing(): boolean {
   return document.querySelector(
     '[role="dialog"], [role="alertdialog"], [data-eventid][contenteditable]',
   ) !== null;
 }
+
+export function formatTime(minutes: number): string {
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+}
+
+function sendToTray(events: TrayEvent[]): void {
+  try {
+    __TAURI__.core.invoke('update_upcoming_events', { events }).catch(() => {});
+  } catch {
+    // __TAURI__ not available
+  }
+}
+
+// ── Primary: API-based update ────────────────────────────────────────
+
+function updateFromApi(): void {
+  const now = new Date();
+  const nowMinutes = now.getHours() * 60 + now.getMinutes();
+
+  const apiEvents = getTodayUpcoming();
+  const trayEvents: TrayEvent[] = apiEvents
+    .filter((e) => {
+      const startMin = e.start.getHours() * 60 + e.start.getMinutes();
+      const until = startMin - nowMinutes;
+      return until >= -30 && until <= 720;
+    })
+    .map((e) => {
+      const startMin = e.start.getHours() * 60 + e.start.getMinutes();
+      return {
+        title: e.title,
+        time: formatTime(startMin),
+        minutes_until: startMin - nowMinutes,
+        event_id: e.id,
+      };
+    });
+
+  sendToTray(trayEvents);
+  console.log(`[CalBlend] Tray update (API): ${trayEvents.length} events`);
+}
+
+// ── Fallback: DOM-based scan ─────────────────────────────────────────
 
 export function parseTimeToMinutes(timeStr: string): number | null {
   const cleaned = timeStr.trim().toLowerCase();
@@ -51,13 +92,12 @@ export function parseTimeToMinutes(timeStr: string): number | null {
     return parseInt(match24[1]!, 10) * 60 + parseInt(match24[2]!, 10);
   }
 
-  return null;
-}
+  const matchPtBr = cleaned.match(/^(\d{1,2})h(\d{2})$/);
+  if (matchPtBr) {
+    return parseInt(matchPtBr[1]!, 10) * 60 + parseInt(matchPtBr[2]!, 10);
+  }
 
-export function formatTime(minutes: number): string {
-  const h = Math.floor(minutes / 60);
-  const m = minutes % 60;
-  return `${h.toString().padStart(2, '0')}:${m.toString().padStart(2, '0')}`;
+  return null;
 }
 
 export function extractEventInfo(el: HTMLElement): { title: string; startMinutes: number } | null {
@@ -65,9 +105,8 @@ export function extractEventInfo(el: HTMLElement): { title: string; startMinutes
 
   let startMinutes: number | null = null;
 
-  // Match time range: "10:30am – 12pm", "5:30 – 6:30am", "10am – 12pm"
   const ariaTimeMatch = ariaLabel.match(
-    /(\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm))\s*[–\-]/,
+    /(\d{1,2}(?:[:h]\d{2})?\s*(?:AM|PM|am|pm)?)\s*(?:[–\-]|às\b)/,
   );
   if (ariaTimeMatch) {
     startMinutes = parseTimeToMinutes(ariaTimeMatch[1]!);
@@ -78,7 +117,7 @@ export function extractEventInfo(el: HTMLElement): { title: string; startMinutes
     for (const textEl of textEls) {
       const text = textEl.textContent?.trim() ?? '';
       if (!/\d/.test(text)) continue;
-      const timeMatch = text.match(/(\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm)?)/);
+      const timeMatch = text.match(/(\d{1,2}(?:[:h]\d{2})?\s*(?:AM|PM|am|pm)?)/);
       if (timeMatch) {
         startMinutes = parseTimeToMinutes(timeMatch[1]!);
         if (startMinutes !== null) break;
@@ -88,19 +127,12 @@ export function extractEventInfo(el: HTMLElement): { title: string; startMinutes
 
   if (startMinutes === null) return null;
 
-  // Extract title from aria-label by removing the time range portion.
-  // aria-label formats:
-  //   "Retro + Planning, 10:30am – 12pm"
-  //   "Title, March 23, 5:30 – 6:30am"
-  //   "5:30 – 6:30am"  (no title)
   let title = '';
   if (ariaLabel) {
-    // Remove the time range and everything after it
     const cleaned = ariaLabel.replace(
-      /,?\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm)?\s*[–\-]\s*\d{1,2}(?::\d{2})?\s*(?:AM|PM|am|pm).*/i,
+      /,?\s*(?:das?\s+)?\d{1,2}(?:[:h]\d{2})?\s*(?:AM|PM|am|pm)?\s*(?:[–\-]|às)\s*\d{1,2}(?:[:h]\d{2})?\s*(?:AM|PM|am|pm)?.*/i,
       '',
     );
-    // Remove trailing date parts ("March 23", "23 de março", etc.)
     title = cleaned
       .replace(/,\s*[A-Za-z\u00C0-\u024F]+\s+\d{1,2}\s*$/, '')
       .replace(/,\s*\d{1,2}\s+de\s+[A-Za-z\u00C0-\u024F]+\s*$/, '')
@@ -108,13 +140,12 @@ export function extractEventInfo(el: HTMLElement): { title: string; startMinutes
       .trim();
   }
 
-  // Fallback: first aria-hidden element that doesn't look like a time
   if (!title) {
     const textEls = el.querySelectorAll<HTMLElement>('[aria-hidden="true"]');
     for (const textEl of textEls) {
       const text = textEl.textContent?.trim() ?? '';
-      if (/^\d{1,2}(:\d{2})?\s*(AM|PM|am|pm|–|-)/i.test(text)) continue;
-      if (/^\d{1,2}:\d{2}$/.test(text)) continue;
+      if (/^\d{1,2}([:h]\d{2})?\s*(AM|PM|am|pm|–|-)/i.test(text)) continue;
+      if (/^\d{1,2}[:h]\d{2}$/.test(text)) continue;
       if (!text || text.length < 2) continue;
       title = text;
       break;
@@ -127,47 +158,47 @@ export function extractEventInfo(el: HTMLElement): { title: string; startMinutes
   return { title, startMinutes };
 }
 
-/**
- * Find today's column index (0-based) in the calendar grid.
- * Returns -1 if today is not visible.
- */
-function findTodayColumnIndex(): number {
+function findTodayColumnBounds(): { left: number; right: number } | null {
   const now = new Date();
   const todayKey = ((now.getFullYear() - 1970) << 9) | ((now.getMonth() + 1) << 5) | now.getDate();
 
   const dayCells = document.querySelectorAll<HTMLElement>('div[data-datekey]:not([jsaction])');
-  for (let i = 0; i < dayCells.length; i++) {
-    if (dayCells[i]!.getAttribute('data-datekey') === String(todayKey)) return i;
-  }
-  return -1;
-}
+  let todayCell: HTMLElement | null = null;
 
-/**
- * Check if an event element belongs to today's column by comparing its
- * horizontal position with the column headers.
- */
-function isInTodayColumn(el: HTMLElement, todayIndex: number): boolean {
-  if (todayIndex < 0) return true; // today not visible, allow all
+  for (const cell of dayCells) {
+    if (cell.getAttribute('data-datekey') === String(todayKey)) {
+      todayCell = cell;
+      break;
+    }
+  }
+
+  if (!todayCell) return null;
+
+  const todayRect = todayCell.getBoundingClientRect();
+  const todayCenterX = todayRect.left + todayRect.width / 2;
 
   const headers = document.querySelectorAll<HTMLElement>('[role="columnheader"]');
-  if (todayIndex >= headers.length) return true;
+  for (const header of headers) {
+    const rect = header.getBoundingClientRect();
+    if (todayCenterX >= rect.left && todayCenterX <= rect.right) {
+      return { left: rect.left, right: rect.right };
+    }
+  }
 
-  const todayHeader = headers[todayIndex]!;
-  const headerRect = todayHeader.getBoundingClientRect();
-  const elRect = el.getBoundingClientRect();
-
-  // Event center X should be within the header column bounds
-  const elCenterX = elRect.left + elRect.width / 2;
-  return elCenterX >= headerRect.left && elCenterX <= headerRect.right;
+  return { left: todayRect.left, right: todayRect.right };
 }
 
-function scanAndUpdate(): void {
-  // Never scan while user is editing an event
-  if (isUserEditing()) return;
+function isInTodayColumn(el: HTMLElement, bounds: { left: number; right: number } | null): boolean {
+  if (!bounds) return true;
+  const elRect = el.getBoundingClientRect();
+  const elCenterX = elRect.left + elRect.width / 2;
+  return elCenterX >= bounds.left && elCenterX <= bounds.right;
+}
 
+function updateFromDom(): void {
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const todayIndex = findTodayColumnIndex();
+  const todayBounds = findTodayColumnBounds();
 
   const eventEls = document.querySelectorAll<HTMLElement>(
     '[data-eventid][role="button"], [data-eventid] > [role="button"]',
@@ -184,8 +215,7 @@ function scanAndUpdate(): void {
     if (!eventId || seen.has(eventId)) continue;
     seen.add(eventId);
 
-    // Skip events not in today's column
-    if (!isInTodayColumn(el, todayIndex)) continue;
+    if (!isInTodayColumn(el, todayBounds)) continue;
 
     const info = extractEventInfo(el);
     if (!info) continue;
@@ -207,19 +237,33 @@ function scanAndUpdate(): void {
     return aMin - bMin;
   });
 
-  try {
-    __TAURI__.core.invoke('update_upcoming_events', { events });
-  } catch {
-    // Silently ignore — tray update is best-effort
+  sendToTray(events);
+  console.log(`[CalBlend] Tray update (DOM fallback): ${eventEls.length} elements, ${events.length} upcoming`);
+}
+
+// ── Orchestration ────────────────────────────────────────────────────
+
+function scanAndUpdate(): void {
+  if (isUserEditing()) return;
+
+  if (hasData()) {
+    updateFromApi();
+  } else {
+    updateFromDom();
   }
 }
 
 export function initTrayEvents(): void {
-  // Initial scan after calendar renders
-  setTimeout(scanAndUpdate, 8000);
+  // React to API data as it arrives (instant tray refresh)
+  onUpdate(() => {
+    if (!isUserEditing()) {
+      updateFromApi();
+    }
+  });
 
-  // Periodic scan — 1 min interval, skips if dialog is open
+  // Periodic scan — API primary, DOM fallback
+  setTimeout(scanAndUpdate, 8000);
   setInterval(scanAndUpdate, SCAN_INTERVAL_MS);
 
-  console.log('[CalBlend] Tray events scanner active');
+  console.log('[CalBlend] Tray events active (API + DOM fallback)');
 }

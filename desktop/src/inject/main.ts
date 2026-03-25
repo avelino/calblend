@@ -18,6 +18,7 @@ import { applyFeatures, cleanupFeatures } from '@calblend/features';
 import { loadSettings, onSettingsChanged } from '@calblend/storage';
 import { DEFAULT_SETTINGS } from '@calblend/types';
 import type { ExtensionSettings } from '@calblend/types';
+import { initCalendarData } from './calendar-data';
 import { initNotifications } from './notifications';
 import { initTrayEvents } from './tray-events';
 import { initBranding } from './branding';
@@ -102,7 +103,8 @@ async function initCalBlend(): Promise<void> {
     start();
   });
 
-  // Initialize native OS features
+  // Initialize native OS features — API interceptor MUST come first
+  initCalendarData();
   initBranding();
   initNotifications();
   initTrayEvents();

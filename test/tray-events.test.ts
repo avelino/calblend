@@ -43,6 +43,13 @@ describe('parseTimeToMinutes', () => {
     expect(parseTimeToMinutes('  2:30 pm  ')).toBe(870);
   });
 
+  it('parses Portuguese "h" separator format', () => {
+    expect(parseTimeToMinutes('11h30')).toBe(690);
+    expect(parseTimeToMinutes('14h00')).toBe(840);
+    expect(parseTimeToMinutes('0h00')).toBe(0);
+    expect(parseTimeToMinutes('23h59')).toBe(1439);
+  });
+
   it('returns null for invalid input', () => {
     expect(parseTimeToMinutes('')).toBeNull();
     expect(parseTimeToMinutes('abc')).toBeNull();
@@ -201,5 +208,36 @@ describe('extractEventInfo', () => {
     const info = extractEventInfo(el);
     expect(info).not.toBeNull();
     expect(info!.title).toBe('tech/staff: semanal');
+  });
+
+  it('handles 24h format in aria-label (Portuguese locale)', () => {
+    const el = createEventEl({
+      ariaLabel: 'Daily Standup, 11:30 – 12:00',
+    });
+    const info = extractEventInfo(el);
+    expect(info).not.toBeNull();
+    expect(info!.title).toBe('Daily Standup');
+    expect(info!.startMinutes).toBe(690);
+  });
+
+  it('handles Portuguese "às" separator in aria-label', () => {
+    const el = createEventEl({
+      ariaLabel: 'Almoço, das 12:00 às 13:30',
+    });
+    const info = extractEventInfo(el);
+    expect(info).not.toBeNull();
+    expect(info!.title).toBe('Almoço');
+    expect(info!.startMinutes).toBe(720);
+  });
+
+  it('handles Portuguese "h" time format in aria-hidden text', () => {
+    const el = createEventEl({
+      ariaLabel: '',
+      textParts: ['14h30', 'Reunião Semanal'],
+    });
+    const info = extractEventInfo(el);
+    expect(info).not.toBeNull();
+    expect(info!.title).toBe('Reunião Semanal');
+    expect(info!.startMinutes).toBe(870);
   });
 });
