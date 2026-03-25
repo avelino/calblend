@@ -1,4 +1,5 @@
 .DS_Store
+.playwright-mcp/
 
 # Build outputs
 .output/
