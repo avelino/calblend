@@ -333,6 +333,25 @@ pub fn run() {
                 }
             }
 
+            // Show main window when app is activated (Cmd+Tab, dock click, etc.)
+            #[cfg(target_os = "macos")]
+            {
+                let app_handle_activate = app.handle().clone();
+
+                unsafe {
+                    let center = objc2_foundation::NSNotificationCenter::defaultCenter();
+                    let block = block2::RcBlock::new(move |_notif: std::ptr::NonNull<objc2_foundation::NSNotification>| {
+                        show_main_window(&app_handle_activate);
+                    });
+                    center.addObserverForName_object_queue_usingBlock(
+                        Some(objc2_app_kit::NSApplicationDidBecomeActiveNotification),
+                        None,
+                        None,
+                        &block,
+                    );
+                }
+            }
+
             // Global shortcut: Cmd+Shift+C → toggle window
             let app_handle = app.handle().clone();
             app.global_shortcut().on_shortcut("CmdOrCtrl+Shift+C", move |_app, _shortcut, event| {
@@ -517,14 +536,10 @@ pub fn run() {
         .expect("error while building CalBlend")
         .run(|_app_handle, _event| {
             #[cfg(target_os = "macos")]
-            if let tauri::RunEvent::Reopen {
-                has_visible_windows,
-                ..
-            } = _event
-            {
-                if !has_visible_windows {
-                    show_main_window(_app_handle);
-                }
+            if let tauri::RunEvent::Reopen { .. } = _event {
+                // Always show window on Cmd+Tab or dock click — the window
+                // may be hidden (not destroyed) after close-to-tray.
+                show_main_window(_app_handle);
             }
         });
 }
