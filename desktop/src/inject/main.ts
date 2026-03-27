@@ -22,6 +22,7 @@ import { initCalendarData } from './calendar-data';
 import { initNotifications } from './notifications';
 import { initTrayEvents } from './tray-events';
 import { initBranding } from './branding';
+import { initCalendarFetch } from './calendar-fetch';
 
 async function initCalBlend(): Promise<void> {
   let settings: ExtensionSettings;
@@ -108,6 +109,7 @@ async function initCalBlend(): Promise<void> {
   initBranding();
   initNotifications();
   initTrayEvents();
+  initCalendarFetch();
 
   console.log('[CalBlend] Desktop injection active');
 }

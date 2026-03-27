@@ -137,12 +137,8 @@ fn update_tray_title(app: &tauri::AppHandle, events: &[UpcomingEvent]) {
     let next = events.iter().find(|e| e.minutes_until >= 0);
     let title = match next {
         Some(ev) => {
-            // Truncate title to keep menu bar compact
-            let name = if ev.title.len() > 20 {
-                format!("{}…", &ev.title[..ev.title.floor_char_boundary(18)])
-            } else {
-                ev.title.clone()
-            };
+            // Truncate title to keep menu bar compact (count chars, not bytes)
+            let name = truncate_chars(&ev.title, 20);
             format!("{} {}", ev.time, name)
         }
         None => String::new(),
@@ -196,6 +192,14 @@ fn update_dock_badge(app: &tauri::AppHandle, events: &[UpcomingEvent]) {
     }
 }
 
+fn truncate_chars(s: &str, max_chars: usize) -> String {
+    if s.chars().count() <= max_chars {
+        return s.to_string();
+    }
+    let end = s.char_indices().nth(max_chars - 2).map_or(s.len(), |(i, _)| i);
+    format!("{}…", &s[..end])
+}
+
 fn format_event_label(event: &UpcomingEvent) -> String {
     let time_info = if event.minutes_until < 0 {
         "now".to_string()
@@ -213,11 +217,7 @@ fn format_event_label(event: &UpcomingEvent) -> String {
         }
     };
 
-    let title = if event.title.len() > 30 {
-        format!("{}…", &event.title[..28])
-    } else {
-        event.title.clone()
-    };
+    let title = truncate_chars(&event.title, 30);
 
     format!("{} {} · {}", event.time, title, time_info)
 }

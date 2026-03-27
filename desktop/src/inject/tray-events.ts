@@ -46,34 +46,7 @@ function sendToTray(events: TrayEvent[]): void {
   }
 }
 
-// ── Primary: API-based update ────────────────────────────────────────
-
-function updateFromApi(): void {
-  const now = new Date();
-  const nowMinutes = now.getHours() * 60 + now.getMinutes();
-
-  const apiEvents = getTodayUpcoming();
-  const trayEvents: TrayEvent[] = apiEvents
-    .filter((e) => {
-      const startMin = e.start.getHours() * 60 + e.start.getMinutes();
-      const until = startMin - nowMinutes;
-      return until >= -30 && until <= 720;
-    })
-    .map((e) => {
-      const startMin = e.start.getHours() * 60 + e.start.getMinutes();
-      return {
-        title: e.title,
-        time: formatTime(startMin),
-        minutes_until: startMin - nowMinutes,
-        event_id: e.id,
-      };
-    });
-
-  sendToTray(trayEvents);
-  console.log(`[CalBlend] Tray update (API): ${trayEvents.length} events`);
-}
-
-// ── Fallback: DOM-based scan ─────────────────────────────────────────
+// ── DOM helpers ──────────────────────────────────────────────────────
 
 export function parseTimeToMinutes(timeStr: string): number | null {
   const cleaned = timeStr.trim().toLowerCase();
@@ -195,17 +168,34 @@ function isInTodayColumn(el: HTMLElement, bounds: { left: number; right: number 
   return elCenterX >= bounds.left && elCenterX <= bounds.right;
 }
 
-function updateFromDom(): void {
+// ── Orchestration ────────────────────────────────────────────────────
+
+function mergeApiAndDom(): TrayEvent[] {
   const now = new Date();
   const nowMinutes = now.getHours() * 60 + now.getMinutes();
-  const todayBounds = findTodayColumnBounds();
 
+  // Start with API events (primary source)
+  const apiEvents = hasData() ? getTodayUpcoming() : [];
+  const seen = new Map<string, TrayEvent>();
+
+  for (const e of apiEvents) {
+    const startMin = e.start.getHours() * 60 + e.start.getMinutes();
+    const until = startMin - nowMinutes;
+    if (until >= -30 && until <= 720) {
+      seen.set(e.id, {
+        title: e.title,
+        time: formatTime(startMin),
+        minutes_until: until,
+        event_id: e.id,
+      });
+    }
+  }
+
+  // Supplement with DOM events to catch anything the API interceptor missed
+  const todayBounds = findTodayColumnBounds();
   const eventEls = document.querySelectorAll<HTMLElement>(
     '[data-eventid][role="button"], [data-eventid] > [role="button"]',
   );
-
-  const seen = new Set<string>();
-  const events: TrayEvent[] = [];
 
   for (const el of eventEls) {
     const eventId =
@@ -213,8 +203,6 @@ function updateFromDom(): void {
       el.parentElement?.getAttribute('data-eventid') ??
       '';
     if (!eventId || seen.has(eventId)) continue;
-    seen.add(eventId);
-
     if (!isInTodayColumn(el, todayBounds)) continue;
 
     const info = extractEventInfo(el);
@@ -223,7 +211,7 @@ function updateFromDom(): void {
     const minutesUntil = info.startMinutes - nowMinutes;
     if (minutesUntil < -30 || minutesUntil > 720) continue;
 
-    events.push({
+    seen.set(eventId, {
       title: info.title,
       time: formatTime(info.startMinutes),
       minutes_until: minutesUntil,
@@ -231,33 +219,31 @@ function updateFromDom(): void {
     });
   }
 
+  const events = Array.from(seen.values());
   events.sort((a, b) => {
     const aMin = parseTimeToMinutes(a.time) ?? 0;
     const bMin = parseTimeToMinutes(b.time) ?? 0;
     return aMin - bMin;
   });
 
-  sendToTray(events);
-  console.log(`[CalBlend] Tray update (DOM fallback): ${eventEls.length} elements, ${events.length} upcoming`);
+  return events;
 }
-
-// ── Orchestration ────────────────────────────────────────────────────
 
 function scanAndUpdate(): void {
   if (isUserEditing()) return;
 
-  if (hasData()) {
-    updateFromApi();
-  } else {
-    updateFromDom();
-  }
+  const events = mergeApiAndDom();
+  sendToTray(events);
+  console.log(`[CalBlend] Tray update (merged): ${events.length} events`);
 }
 
 export function initTrayEvents(): void {
   // React to API data as it arrives (instant tray refresh)
   onUpdate(() => {
     if (!isUserEditing()) {
-      updateFromApi();
+      const events = mergeApiAndDom();
+      sendToTray(events);
+      console.log(`[CalBlend] Tray update (API trigger, merged): ${events.length} events`);
     }
   });
 
