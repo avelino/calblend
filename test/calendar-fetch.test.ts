@@ -11,7 +11,7 @@ vi.mock('../desktop/src/inject/calendar-data', () => ({
 
 // Now import after mock is set up — we need to test the module's internal logic
 // Since the module exports only initCalendarFetch, we test via the fetch calls
-import { initCalendarFetch } from '../desktop/src/inject/calendar-fetch';
+import { initCalendarFetch, _resetFetchState } from '../desktop/src/inject/calendar-fetch';
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -47,11 +47,14 @@ function makeEvent(id: string, title: string, startHour: number) {
 describe('calendar-fetch', () => {
   beforeEach(() => {
     vi.useFakeTimers();
+    vi.clearAllTimers();
     mockMergeEvents.mockClear();
     mockParseApiV3Event.mockClear();
+    _resetFetchState();
   });
 
   afterEach(() => {
+    vi.clearAllTimers();
     vi.useRealTimers();
     vi.restoreAllMocks();
   });
@@ -167,9 +170,61 @@ describe('calendar-fetch', () => {
     const firstCallCount = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
 
     // Second poll after 60s interval
-    await vi.advanceTimersByTimeAsync(60_000);
+    await vi.advanceTimersByTimeAsync(60_100);
     const secondCallCount = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
 
     expect(secondCallCount).toBeGreaterThan(firstCallCount);
+  });
+
+  it('backs off on consecutive failures', async () => {
+    global.fetch = vi.fn(async () => {
+      return { ok: false, status: 401, json: async () => ({}) } as unknown as Response;
+    });
+
+    initCalendarFetch();
+
+    // First poll after 5s — fails, consecutiveFailures = 1
+    await vi.advanceTimersByTimeAsync(5_100);
+    const firstCallCount = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
+    expect(firstCallCount).toBeGreaterThan(0);
+
+    // Normal 60s interval should NOT trigger next poll (backoff = 120s)
+    await vi.advanceTimersByTimeAsync(60_000);
+    const afterNormalInterval = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
+    expect(afterNormalInterval).toBe(firstCallCount);
+
+    // After full backoff (120s total from first poll) the second poll fires
+    await vi.advanceTimersByTimeAsync(61_000);
+    const afterBackoff = (global.fetch as ReturnType<typeof vi.fn>).mock.calls.length;
+    expect(afterBackoff).toBeGreaterThan(firstCallCount);
+  });
+
+  it('skips mergeEvents when events are unchanged', async () => {
+    const event1 = makeEvent('ev1', 'Meeting', 14);
+    const parsedEvent = {
+      id: 'ev1',
+      title: 'Meeting',
+      start: new Date(2026, 0, 1, 14, 0),
+      end: new Date(2026, 0, 1, 15, 0),
+      allDay: false,
+      calendarId: undefined,
+    };
+
+    mockFetchResponses({
+      'calendarList': { items: [{ id: 'primary', selected: true }] },
+      'calendars/primary/events': { items: [event1] },
+    });
+
+    mockParseApiV3Event.mockReturnValue(parsedEvent);
+
+    initCalendarFetch();
+
+    // First poll — should call mergeEvents
+    await vi.advanceTimersByTimeAsync(5_100);
+    expect(mockMergeEvents).toHaveBeenCalledTimes(1);
+
+    // Second poll — same events, should skip mergeEvents
+    await vi.advanceTimersByTimeAsync(60_100);
+    expect(mockMergeEvents).toHaveBeenCalledTimes(1);
   });
 });

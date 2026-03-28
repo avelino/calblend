@@ -15,6 +15,30 @@ import type { CalendarEventData } from './calendar-data';
 const API_BASE = 'https://www.googleapis.com/calendar/v3';
 const POLL_INTERVAL_MS = 60_000;
 const INITIAL_DELAY_MS = 5_000;
+const MAX_BACKOFF_MS = 15 * 60_000; // 15 minutes
+
+// ── Backoff state ────────────────────────────────────────────────────
+
+let consecutiveFailures = 0;
+let lastEventHash = '';
+
+export function _resetFetchState(): void {
+  consecutiveFailures = 0;
+  lastEventHash = '';
+}
+
+function getBackoffDelay(): number {
+  if (consecutiveFailures === 0) return POLL_INTERVAL_MS;
+  const delay = POLL_INTERVAL_MS * Math.pow(2, consecutiveFailures);
+  return Math.min(delay, MAX_BACKOFF_MS);
+}
+
+function hashEvents(events: CalendarEventData[]): string {
+  return events
+    .map((e) => `${e.id}|${e.title}|${e.start.getTime()}|${e.end.getTime()}`)
+    .sort()
+    .join('\n');
+}
 
 // ── Helpers ──────────────────────────────────────────────────────────
 
@@ -26,11 +50,13 @@ async function apiFetch<T>(url: string): Promise<T | null> {
     });
     if (!res.ok) {
       console.warn(`[CalBlend] API fetch ${res.status}: ${url.slice(0, 80)}`);
+      consecutiveFailures++;
       return null;
     }
     return (await res.json()) as T;
   } catch (err) {
     console.warn(`[CalBlend] API fetch error: ${err}`);
+    consecutiveFailures++;
     return null;
   }
 }
@@ -110,6 +136,17 @@ async function fetchAllEvents(): Promise<void> {
       allEvents.push(...events);
     }
 
+    // Reset backoff on successful fetch
+    consecutiveFailures = 0;
+
+    // Skip tray update if events haven't changed
+    const newHash = hashEvents(allEvents);
+    if (newHash === lastEventHash) {
+      console.log('[CalBlend] Active fetch: no changes detected, skipping update');
+      return;
+    }
+    lastEventHash = newHash;
+
     if (allEvents.length > 0) {
       mergeEvents(allEvents);
     }
@@ -118,17 +155,23 @@ async function fetchAllEvents(): Promise<void> {
       `[CalBlend] Active fetch: ${allEvents.length} events from ${calendarIds.length} calendars`,
     );
   } catch (err) {
+    consecutiveFailures++;
     console.warn(`[CalBlend] Active fetch error: ${err}`);
   }
 }
 
 // ── Init ─────────────────────────────────────────────────────────────
 
-export function initCalendarFetch(): void {
-  setTimeout(() => {
-    fetchAllEvents();
-    setInterval(fetchAllEvents, POLL_INTERVAL_MS);
-  }, INITIAL_DELAY_MS);
+async function pollLoop(): Promise<void> {
+  await fetchAllEvents();
+  const delay = getBackoffDelay();
+  if (consecutiveFailures > 0) {
+    console.log(`[CalBlend] Backoff: next fetch in ${Math.round(delay / 1000)}s (${consecutiveFailures} failures)`);
+  }
+  setTimeout(pollLoop, delay);
+}
 
+export function initCalendarFetch(): void {
+  setTimeout(pollLoop, INITIAL_DELAY_MS);
   console.log('[CalBlend] Active calendar fetcher scheduled');
 }

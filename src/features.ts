@@ -101,10 +101,7 @@ export function applyRefinedTimeLine(): void {
   if (!main) return;
 
   // The time indicator is a thin, absolutely positioned element with a red background.
-  // Use a targeted selector to avoid scanning all aria-hidden elements.
-  const candidates = main.querySelectorAll<HTMLElement>(
-    '[data-datekey] div[aria-hidden="true"], [role="gridcell"] div[aria-hidden="true"]',
-  );
+  const candidates = main.querySelectorAll<HTMLElement>('div[aria-hidden="true"]');
 
   for (const el of candidates) {
     const bg = el.style.backgroundColor || '';

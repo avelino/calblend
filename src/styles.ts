@@ -70,10 +70,20 @@ const EVENT_SHADOW = `
 // ─── SMOOTH ANIMATIONS ──────────────────────────────────────────
 // Rich transitions and micro-interactions on all interactive elements
 const SMOOTH_ANIMATIONS = `
+[data-eventid][role="button"],
+[data-eventid] > [role="button"],
+[data-eventchip] {
+  transition: transform 0.15s ease, box-shadow 0.15s ease, filter 0.15s ease !important;
+}
 [data-eventid][role="button"]:hover,
 [data-eventid] > [role="button"]:hover,
 [data-eventchip]:hover {
+  transform: translateY(-1px) !important;
   filter: brightness(1.04) !important;
+}
+[role="button"],
+button {
+  transition: background-color 0.12s ease, color 0.12s ease, opacity 0.12s ease !important;
 }
 `;
 
@@ -282,9 +292,29 @@ body {
   background: linear-gradient(180deg, #f8f9fc 0%, #f0f1f6 100%) !important;
   background-attachment: fixed !important;
 }
+[data-eventid][role="button"],
+[data-eventid] > [role="button"],
+[data-eventchip] {
+  filter: saturate(0.85) brightness(1.02) !important;
+}
+[data-eventid][role="button"]:hover,
+[data-eventid] > [role="button"]:hover,
+[data-eventchip]:hover {
+  filter: saturate(1) brightness(1.05) !important;
+}
 @media (prefers-color-scheme: dark) {
   body {
     background: linear-gradient(180deg, #111113 0%, #0c0c0e 100%) !important;
+  }
+  [data-eventid][role="button"],
+  [data-eventid] > [role="button"],
+  [data-eventchip] {
+    filter: saturate(0.8) brightness(0.95) !important;
+  }
+  [data-eventid][role="button"]:hover,
+  [data-eventid] > [role="button"]:hover,
+  [data-eventchip]:hover {
+    filter: saturate(1) brightness(1.05) !important;
   }
 }
 `;

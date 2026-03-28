@@ -543,3 +543,137 @@ pub fn run() {
             }
         });
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    // ── truncate_chars ──────────────────────────────────────────────
+
+    #[test]
+    fn truncate_short_string_unchanged() {
+        assert_eq!(truncate_chars("Hello", 20), "Hello");
+    }
+
+    #[test]
+    fn truncate_exact_length_unchanged() {
+        let s = "12345678901234567890"; // 20 chars
+        assert_eq!(truncate_chars(s, 20), s);
+    }
+
+    #[test]
+    fn truncate_long_string_adds_ellipsis() {
+        let s = "This is a very long event title that should be truncated";
+        let result = truncate_chars(s, 20);
+        assert!(result.ends_with('…'));
+        assert!(result.chars().count() <= 20);
+    }
+
+    #[test]
+    fn truncate_multibyte_portuguese() {
+        let s = "Reunião de alinhamento técnico semanal";
+        let result = truncate_chars(s, 20);
+        assert!(result.ends_with('…'));
+        // Must not panic on multi-byte boundaries
+        assert!(result.is_char_boundary(result.len()));
+    }
+
+    #[test]
+    fn truncate_emoji_safe() {
+        let s = "🎉🎊🎈🎁🎂🎄🎃🎇🎆🎍🎎🏮🎐🎑🎒🎓🎠🎡🎢🎪🎭";
+        let result = truncate_chars(s, 10);
+        assert!(result.ends_with('…'));
+        assert!(result.chars().count() <= 10);
+    }
+
+    #[test]
+    fn truncate_empty_string() {
+        assert_eq!(truncate_chars("", 20), "");
+    }
+
+    #[test]
+    fn truncate_single_char_max() {
+        // max_chars=1 means 0 content chars + ellipsis... edge case
+        // With max_chars=3, should show 1 char + ellipsis
+        let result = truncate_chars("Hello", 3);
+        assert!(result.ends_with('…'));
+        assert!(result.chars().count() <= 3);
+    }
+
+    // ── format_event_label ──────────────────────────────────────────
+
+    #[test]
+    fn format_label_past_event() {
+        let ev = UpcomingEvent {
+            title: "Standup".to_string(),
+            time: "09:00".to_string(),
+            minutes_until: -5,
+            event_id: "id1".to_string(),
+        };
+        let label = format_event_label(&ev);
+        assert!(label.contains("now"));
+        assert!(label.contains("09:00"));
+        assert!(label.contains("Standup"));
+    }
+
+    #[test]
+    fn format_label_starting_now() {
+        let ev = UpcomingEvent {
+            title: "Meeting".to_string(),
+            time: "14:00".to_string(),
+            minutes_until: 0,
+            event_id: "id2".to_string(),
+        };
+        let label = format_event_label(&ev);
+        assert!(label.contains("starting"));
+    }
+
+    #[test]
+    fn format_label_minutes_away() {
+        let ev = UpcomingEvent {
+            title: "Call".to_string(),
+            time: "15:30".to_string(),
+            minutes_until: 25,
+            event_id: "id3".to_string(),
+        };
+        let label = format_event_label(&ev);
+        assert!(label.contains("in 25 min"));
+    }
+
+    #[test]
+    fn format_label_hours_away() {
+        let ev = UpcomingEvent {
+            title: "Workshop".to_string(),
+            time: "18:00".to_string(),
+            minutes_until: 150,
+            event_id: "id4".to_string(),
+        };
+        let label = format_event_label(&ev);
+        assert!(label.contains("in 2h30m"));
+    }
+
+    #[test]
+    fn format_label_exact_hour() {
+        let ev = UpcomingEvent {
+            title: "Lunch".to_string(),
+            time: "12:00".to_string(),
+            minutes_until: 120,
+            event_id: "id5".to_string(),
+        };
+        let label = format_event_label(&ev);
+        assert!(label.contains("in 2h"));
+        assert!(!label.contains("2h0m"));
+    }
+
+    #[test]
+    fn format_label_truncates_long_title() {
+        let ev = UpcomingEvent {
+            title: "Reunião de alinhamento técnico com toda a equipe de engenharia".to_string(),
+            time: "10:00".to_string(),
+            minutes_until: 30,
+            event_id: "id6".to_string(),
+        };
+        let label = format_event_label(&ev);
+        assert!(label.contains('…'));
+    }
+}

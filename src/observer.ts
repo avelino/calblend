@@ -9,16 +9,15 @@ export function createCalendarObserver(
 ): { observer: MutationObserver; start: () => void; stop: () => void } {
   const MAIN_SELECTORS = "[role='main']";
   const MINI_SELECTORS = 'div[data-month], div[data-ical]';
-  const DEBOUNCE_MS = 200;
 
-  let timer: ReturnType<typeof setTimeout> | null = null;
+  let rafId: ReturnType<typeof requestAnimationFrame> | null = null;
   let observeTarget: Node | null = null;
   let lastUrl = location.href;
   let pendingMain = new Set<HTMLElement>();
   let pendingMini = new Set<HTMLElement>();
 
   function flush(): void {
-    timer = null;
+    rafId = null;
     observer.disconnect();
 
     const main = pendingMain;
@@ -39,8 +38,8 @@ export function createCalendarObserver(
   }
 
   function scheduleFlush(): void {
-    if (timer !== null) clearTimeout(timer);
-    timer = setTimeout(flush, DEBOUNCE_MS);
+    if (rafId !== null) cancelAnimationFrame(rafId);
+    rafId = requestAnimationFrame(flush);
   }
 
   function scheduleFullProcess(): void {
@@ -123,9 +122,9 @@ export function createCalendarObserver(
     },
     stop() {
       observeTarget = null;
-      if (timer !== null) {
-        clearTimeout(timer);
-        timer = null;
+      if (rafId !== null) {
+        cancelAnimationFrame(rafId);
+        rafId = null;
       }
       pendingMain.clear();
       pendingMini.clear();
